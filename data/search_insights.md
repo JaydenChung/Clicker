@@ -67,3 +67,4 @@ _Log of past recommendations and their effectiveness_
 - Insights improve with more application sessions
 - Clear this file to reset learning (not recommended)
 
+

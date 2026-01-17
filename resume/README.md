@@ -36,3 +36,4 @@ If you maintain your resume in LaTeX, you can store the source files here for ve
 - LaTeX source is optional but recommended for easy editing
 - Update `config/resume_content.md` when you update your resume
 
+

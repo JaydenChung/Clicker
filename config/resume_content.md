@@ -17,7 +17,7 @@ Results-driven Solutions Engineer and Computer Science graduate with experience 
 
 - **Job Title**: Solutions Engineer
 - **Company**: Paystand
-- **Location**: Remote/California
+- **Location**: California
 - **Duration**: June 2025 - Present
 - **Employment Type**: Full-time
 - **Department**: Product

@@ -221,3 +221,4 @@ User can override recommendations:
 - `"skip [location]"` - Exclude location from plan
 - `"focus on [keyword]"` - Prioritize specific keyword
 
+
