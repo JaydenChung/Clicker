@@ -361,7 +361,10 @@ When an open-ended question is encountered:
 /config/
 ├── job_preferences.md        # Keywords and filters
 ├── locations.md              # Target locations
-└── personal_profile.md       # Personal info for forms
+├── personal_profile.md       # Personal info for forms
+├── resume_content.md         # Detailed resume data for questions
+├── projects.md               # Project portfolio for technical questions
+└── interview_answers.md      # Pre-written answers for common questions
 ```
 
 ---
