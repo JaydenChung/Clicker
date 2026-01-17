@@ -1,0 +1,302 @@
+# LinkedIn Job Application Automation - Cursor Rules
+
+## Overview
+This is an automated job application system for LinkedIn. The system uses multiple specialized agents to search for jobs, apply to them, and maintain detailed logs.
+
+## Quick Start Command
+When the user says "apply to jobs" or "start applying", execute the Job Applicant Agent workflow.
+
+## Prerequisites Checklist
+Before starting ANY job application session:
+- [ ] Browser is open and controlled by Cursor
+- [ ] LinkedIn is loaded and user is SIGNED IN
+- [ ] Browser is on LinkedIn homepage (linkedin.com/feed) or Jobs page
+- [ ] Config files exist in `/config/` directory
+
+## Agent Roles
+
+### 1. Job Applicant Agent (PRIMARY)
+**File**: `agents/job_applicant.md`
+**Trigger**: User requests to apply to jobs
+**Responsibilities**:
+- Read job preferences from `config/job_preferences.md`
+- Read locations from `config/locations.md`
+- Read answers from `config/personal_profile.md`
+- Navigate LinkedIn Jobs and perform searches
+- Click "Easy Apply" on matching jobs
+- Fill out application forms
+- Submit applications
+- Coordinate with other agents via signals
+
+### 2. Search Logger Agent
+**File**: `agents/search_logger.md`
+**Trigger**: Automatically when job search begins
+**Responsibilities**:
+- Create session log file in `logs/sessions/`
+- Track every search query and results
+- Maintain search combination matrix
+- Calculate session statistics
+
+### 3. Application Tracker Agent
+**File**: `agents/application_tracker.md`
+**Trigger**: After each successful application
+**Responsibilities**:
+- Create detailed application log in `logs/applications/`
+- Update master index
+- Track application status over time
+
+### 4. Question Tracker Agent
+**File**: `agents/question_tracker.md`
+**Trigger**: When application questions are encountered
+**Responsibilities**:
+- Log all questions to `logs/questions/`
+- Flag unanswered questions for human review
+- Build question database for pattern recognition
+
+### 5. Performance Monitor Agent
+**File**: `agents/performance_monitor.md`
+**Trigger**: Throughout application process
+**Responsibilities**:
+- Track timing metrics
+- Detect stuck states
+- Log errors to `logs/performance/`
+- Suggest optimizations
+
+---
+
+## Workflow: Apply to Jobs
+
+### Phase 1: Initialization
+```
+1. Verify browser is on LinkedIn and signed in
+2. Load configuration files:
+   - config/job_preferences.md → keywords, filters
+   - config/locations.md → target locations
+   - config/personal_profile.md → personal info & answers
+3. Create new session log: logs/sessions/session_YYYY-MM-DD_HH-MM.md
+4. Navigate to Jobs tab if not already there
+```
+
+### Phase 2: Search Loop
+```
+FOR each keyword in job_preferences:
+  FOR each location in locations:
+    1. Enter keyword in job search box
+    2. Enter location in location box
+    3. Press Enter / Click Search
+    4. Log search to session log
+    5. → Go to Phase 3: Application Loop
+```
+
+### Phase 3: Application Loop
+```
+FOR each job in search results:
+  IF job has "Easy Apply" button AND NOT "Applied" badge:
+    1. Click on job listing
+    2. Click "Easy Apply" button
+    3. Start performance timer
+    4. → Go to Phase 4: Form Completion
+```
+
+### Phase 4: Form Completion
+```
+FOR each step in application form:
+  1. Take snapshot of current step
+  2. Identify form fields
+  3. FOR each field:
+     - Look up answer in personal_profile.md
+     - IF not found: Log to question tracker, use best guess
+     - Fill in the field
+  4. Click "Next" or "Review" or "Submit"
+  5. Log step timing
+  
+WHEN "Submit application" clicked:
+  1. Wait for confirmation
+  2. Click "Done"
+  3. Log application to application tracker
+  4. Stop performance timer
+  5. Return to Phase 3 for next job
+```
+
+### Phase 5: Session End
+```
+TRIGGER when:
+  - Context usage > 80%
+  - All search combinations exhausted
+  - Rate limit detected
+  - User interrupts
+
+ACTIONS:
+  1. Complete current application if in progress
+  2. Finalize all logs
+  3. Output session summary
+  4. List unanswered questions for human review
+```
+
+---
+
+## Form Field Mapping
+
+### Common Fields → Profile Keys
+
+| Field Label Contains | Profile Section | Key |
+|---------------------|-----------------|-----|
+| "email" | Basic Information | email |
+| "phone" | Basic Information | phone |
+| "linkedin" | Basic Information | linkedin |
+| "authorized" + "work" | Work Authorization | us_authorized → "Yes" |
+| "sponsor" | Work Authorization | require_sponsorship → "No" |
+| "salary" | Salary Expectations | desired_salary |
+| "start" + "date" | Availability | start_date |
+| "years" + [skill] | Experience Levels | [skill] |
+| "experience" + [skill] | Experience Levels | [skill] |
+
+### Yes/No Question Handling
+For yes/no dropdowns or radio buttons:
+1. Check `config/personal_profile.md` Skills section
+2. If skill listed with "Yes" → Select "Yes"
+3. If skill not found → Default to "Yes" for technical skills
+4. Always log the question and answer used
+
+---
+
+## Error Recovery
+
+### Application Dialog Won't Open
+1. Wait 3 seconds
+2. Scroll Easy Apply button into view
+3. Retry click
+4. If still fails: Log error, skip job, continue
+
+### Form Field Won't Accept Input
+1. Click field to focus
+2. Clear existing content
+3. Type value
+4. If dropdown: Try clicking option directly
+5. If still fails: Log to stuck_log, try next field
+
+### Submit Doesn't Complete
+1. Wait 5 seconds for server response
+2. Check for "Done" button appearance
+3. If "Done" appears: Application succeeded
+4. If error message: Log and continue
+5. If no change: Force close dialog, log as uncertain
+
+### Rate Limit Detected
+Signs:
+- "You've reached the limit" message
+- Applications failing repeatedly
+- Page loading very slowly
+
+Action:
+1. Log rate limit detection
+2. End session gracefully
+3. Report to user
+
+---
+
+## Session Context Management
+
+### Context Budget
+- Reserve 20% context for session wrap-up
+- Monitor context usage throughout
+- Warn at 70% usage
+- Begin wrap-up at 80% usage
+
+### What Consumes Context
+- Each page snapshot
+- Form field interactions
+- Log file updates
+- Error handling
+
+### Optimization Tips
+- Don't re-snapshot unless page changed
+- Batch log updates where possible
+- Skip redundant confirmations
+
+---
+
+## Log File Locations
+
+```
+/logs/
+├── sessions/
+│   └── session_YYYY-MM-DD_HH-MM.md    # Per-session search logs
+├── applications/
+│   ├── _index.md                       # Master application index
+│   └── YYYY-MM-DD_company_title.md    # Individual application records
+├── questions/
+│   ├── unanswered.md                   # ⚠️ HUMAN REVIEW NEEDED
+│   ├── all_questions.md                # Complete question database
+│   └── patterns.md                     # Question patterns & variations
+└── performance/
+    ├── current_session.md              # Real-time metrics
+    ├── history.md                      # Historical performance data
+    ├── stuck_log.md                    # Stuck/error events
+    └── optimizations.md                # Suggested improvements
+```
+
+---
+
+## User Commands
+
+### Start Applying
+Triggers: "apply to jobs", "start applying", "job hunt", "find jobs"
+Action: Execute full workflow from Phase 1
+
+### Quick Apply
+Triggers: "apply to next X jobs", "apply to X more"
+Action: Skip search, apply to next X visible Easy Apply jobs
+
+### Status Check
+Triggers: "status", "how many applied", "progress"
+Action: Report current session statistics
+
+### Stop
+Triggers: "stop", "pause", "end session"
+Action: Complete current application, finalize logs, end
+
+### Review Questions
+Triggers: "what questions", "unanswered", "need my input"
+Action: Display contents of logs/questions/unanswered.md
+
+---
+
+## Personal Profile Reference
+
+The agent should consult `config/personal_profile.md` for:
+- User's name, email, phone
+- Work authorization status
+- Sponsorship requirements
+- Resume filename (must be uploaded to LinkedIn)
+- Experience levels for various technologies
+- Default answers for common questions
+
+**CRITICAL**: If an answer is NOT in the profile, the agent MUST:
+1. Log the question to `logs/questions/unanswered.md`
+2. Use a reasonable default or skip if optional
+3. Note what answer was used
+
+**SETUP REQUIRED**: Users must fill out `config/personal_profile.md` before running!
+
+---
+
+## Safety Rules
+
+1. **Never** apply to the same job twice
+2. **Never** submit incomplete required fields
+3. **Always** complete an application once started (don't abandon mid-form)
+4. **Always** log every application attempt
+5. **Stop** if rate limited or errors exceed threshold
+6. **Preserve** all logs even on error
+
+---
+
+## After Each Session
+
+The human should:
+1. Review `logs/questions/unanswered.md` and update `config/personal_profile.md`
+2. Check `logs/performance/stuck_log.md` for recurring issues
+3. Review `logs/applications/_index.md` for application status
+4. Update `config/job_preferences.md` if search needs adjustment
+

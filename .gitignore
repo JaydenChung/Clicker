@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs - keep structure but not content
+# logs/sessions/*.md  # Uncomment to ignore session logs
+# logs/applications/*.md  # Uncomment to ignore application logs
+# logs/performance/*.md  # Uncomment to ignore performance logs
+
+# Keep log directories but ignore contents (except templates)
+!logs/
+!logs/*/
+!logs/*/_index.md
+!logs/*/.gitkeep
+
+# Personal config backup files
+*.backup
+*.bak
+*~
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
