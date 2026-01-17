@@ -1,5 +1,51 @@
 # LinkedIn Job Application Automation - Cursor Rules
 
+---
+
+## 🚨 CRITICAL RULES - READ FIRST
+
+### THE CORE PRINCIPLE: AUTONOMOUS OPERATION
+This is an **autonomous** job application agent. The user may leave their computer unattended expecting applications to continue. **A stopped session = missed opportunities.**
+
+### RULE #1: NEVER STOP FOR "FIT" REASONS
+**The session must NEVER stop because:**
+- ❌ Job requires more experience than candidate has
+- ❌ Salary seems too high/low for candidate
+- ❌ Role seems too senior/junior
+- ❌ Location isn't ideal
+- ❌ Any "this isn't a good match" judgment
+
+**If a suboptimal job is encountered**: Complete the application anyway, log concerns in notes, and continue to the next job. The agent applies - the human decides fit.
+
+### RULE #2: SOFT BLOCKERS → LEAVE TAB OPEN, CONTINUE SESSION
+When encountering verification requirements:
+- ⏸️ Email verification codes
+- ⏸️ Phone verification
+- ⏸️ Account confirmation emails
+- ⏸️ MFA/2FA prompts
+
+**Action**: Log blocker → Leave tab open → Return to LinkedIn → Continue applying
+
+### RULE #3: LOG EVERY SESSION STOP
+**Every time a session ends, document WHY in `logs/session_stops.md`:**
+- Context window limits
+- Rate limiting
+- Blockers (soft and hard)
+- Errors
+- User interrupts
+- Successful completion
+
+**If you don't log it, the user can't debug or improve the system.**
+
+### RULE #4: HARD BLOCKERS → SKIP APPLICATION, CONTINUE SESSION
+- 🛑 Interactive CAPTCHA
+- 🛑 Mandatory assessments
+- 🛑 Video interview prerequisites
+
+**Action**: Log blocker → Skip THIS application → Continue with next job
+
+---
+
 ## Overview
 This is an automated job application system for LinkedIn with **three main commands**:
 1. **Plan Search** - Analyzes data and creates an optimal search strategy
@@ -285,12 +331,21 @@ Before starting ANY session:
                           ▼
 ┌─────────────────────────────────────────────────────────┐
 │              BLOCKERS & EDGE CASES                       │
-│  Handle as encountered:                                 │
-│    - Account creation → Create or login                 │
-│    - CAPTCHA → Flag for human, skip job                 │
-│    - File upload → Upload resume                        │
-│    - Unknown field → Flag and continue/skip             │
-│    - Error → Log and attempt recovery                   │
+│  ⏸️ SOFT BLOCKERS (Leave tab open, continue session):   │
+│    - Email verification → Log, leave tab, continue      │
+│    - Phone verification → Log, leave tab, continue      │
+│    - Account email confirm → Log, leave tab, continue   │
+│                                                         │
+│  🛑 HARD BLOCKERS (Skip application, continue session): │
+│    - CAPTCHA → Log, skip job, continue session          │
+│    - Mandatory assessment → Log, skip, continue         │
+│                                                         │
+│  ⚠️ NOT BLOCKERS (Continue application):                │
+│    - High experience requirements → Continue            │
+│    - Salary mismatch → Continue                         │
+│    - Senior-level role → Continue                       │
+│                                                         │
+│  Always log blockers in logs/session_stops.md           │
 └─────────────────────────────────────────────────────────┘
                           │
                           ▼
@@ -350,6 +405,7 @@ When an open-ended question is encountered:
 ### Session Logs (`/logs/`)
 ```
 /logs/
+├── session_stops.md          # 🚨 MANDATORY - Log EVERY session end reason
 ├── sessions/                 # Per-session search logs
 ├── applications/             # Detailed per-application logs
 ├── questions/                # Question database
@@ -462,20 +518,38 @@ The master CSV at `/data/applications.csv` can be imported to Google Sheets:
 
 ---
 
-## Safety Rules
+## Safety Rules (PRIORITY ORDER)
 
-1. **Always save to CSV** after each application
-2. **Never delete CSV data** - only append
-3. **Complete applications** before session end
-4. **Log everything** for human review
-5. **Respect rate limits** - stop if detected
+1. **🏆 COMPLETE APPLICATIONS NO MATTER WHAT** - Experience mismatches, salary, location are NOT reasons to stop
+2. **📝 LOG EVERY SESSION STOP** - Always document why a session ended in `logs/session_stops.md`
+3. **⏸️ SOFT BLOCKERS: LEAVE TAB OPEN** - Don't close tabs with pending verifications, continue session
+4. **💾 Always save to CSV** after each application (complete or blocked)
+5. **🔒 Never delete CSV data** - only append
+6. **📋 Log everything** for human review
+7. **⚠️ Respect rate limits** - stop if detected, log the reason
+
+---
+
+## Application Status Values
+
+| Status | Description |
+|--------|-------------|
+| `Applied` | Successfully submitted |
+| `Pending Manual` | Soft blocker - awaiting human completion (tab left open) |
+| `Skipped` | Hard blocker - could not complete |
+| `Interview` | Got interview (manual update) |
+| `Rejected` | Rejected (manual update) |
+| `Offer` | Received offer (manual update) |
+| `No Response` | No response after X days (manual update) |
 
 ---
 
 ## After Each Session
 
 The human should:
-1. Review `logs/questions/unanswered.md` → Update `config/personal_profile.md`
-2. Download `data/applications.csv` → Import to Google Sheets
-3. Run "plan search" before next "apply to jobs" session
-4. Check `logs/performance/stuck_log.md` for issues
+1. **Check `logs/session_stops.md`** → See why session ended and any pending actions
+2. **Complete any "Pending Manual" applications** → Tabs should still be open
+3. Review `logs/questions/unanswered.md` → Update `config/personal_profile.md`
+4. Download `data/applications.csv` → Import to Google Sheets
+5. Run "plan search" before next "apply to jobs" session
+6. Check `logs/performance/stuck_log.md` for issues
