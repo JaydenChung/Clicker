@@ -6,19 +6,20 @@
 
 ## Overview
 
-**Data Collection Started**: <!-- Auto-set on first session -->
-**Total Sessions Analyzed**: 0
-**Total Applications Tracked**: 0
+**Data Collection Started**: 2026-01-17
+**Total Sessions Analyzed**: 1
+**Total Applications Tracked**: 10
 
 ---
 
 ## Most Productive Combinations
 
-_Data will be populated after multiple sessions_
+_Data from first session_
 
 | Rank | Keyword | Location | Easy Apply Rate | Avg Apps/Search |
 |------|---------|----------|-----------------|-----------------|
-| - | - | - | - | - |
+| 1 | Associate Product Manager | Los Angeles | 100% | 6 |
+| 2 | Product Manager | Los Angeles | 100% | 4 |
 
 ---
 
@@ -28,7 +29,9 @@ _Current saturation by keyword + location_
 
 | Keyword | Location | Applications | Status |
 |---------|----------|--------------|--------|
-| - | - | - | - |
+| Associate Product Manager | Los Angeles, California | 6 | 🟢 Low |
+| Product Manager | Los Angeles, California | 4 | 🟢 Low |
+| All other combinations | All locations | 0 | ⚪ None |
 
 ---
 
@@ -36,8 +39,8 @@ _Current saturation by keyword + location_
 
 _Patterns in job posting times (requires multiple sessions to detect)_
 
-- **Best day of week**: Unknown
-- **Best time of day**: Unknown
+- **Best day of week**: Unknown (only Saturday data)
+- **Best time of day**: Unknown (only midday data)
 - **Freshest listings**: Unknown
 
 ---
@@ -57,14 +60,25 @@ _Log of past recommendations and their effectiveness_
 
 | Date | Recommendation | Followed | Result |
 |------|----------------|----------|--------|
-| - | - | - | - |
+| 2026-01-17 | Focus on San Francisco (untapped) | Pending | - |
+| 2026-01-17 | Add Solutions Engineer keyword | Pending | - |
+| 2026-01-17 | Diversify from PM roles | Pending | - |
+
+---
+
+## Session Effectiveness Tracking
+
+| Session | Date | Searches | Applications | Apps/Search |
+|---------|------|----------|--------------|-------------|
+| 1 | 2026-01-17 | 2 | 10 | 5.0 |
 
 ---
 
 ## Notes
 
-- This file is for the agent's learning, not human editing
-- Insights improve with more application sessions
-- Clear this file to reset learning (not recommended)
-
+- First session data collected on 2026-01-17
+- Only Los Angeles searched so far
+- San Francisco, San Jose, and Remote locations completely untapped
+- Solutions Engineer keyword never attempted (could yield different job pool)
+- Insights will improve with more application sessions
 

@@ -22,9 +22,9 @@ application_id,date_applied,time_applied,company,job_title,location,work_type,jo
 | `company` | string | Company name |
 | `job_title` | string | Exact job title from listing |
 | `location` | string | Job location |
-| `work_type` | string | Remote / Hybrid / On-site |
-| `job_url` | string | Full LinkedIn job URL |
-| `status` | string | Applied / Interview / Rejected / Offer / No Response |
+| `work_type` | string | Remote / Hybrid / On-site / External |
+| `job_url` | string | Full LinkedIn job URL or external URL |
+| `status` | string | Applied / Pending Manual / Skipped / Interview / Rejected / Offer / No Response |
 | `salary_listed` | string | Salary if shown, else empty |
 | `applicant_count` | string | "200+ applicants" if shown |
 | `search_keyword` | string | Keyword used to find this job |
@@ -32,9 +32,21 @@ application_id,date_applied,time_applied,company,job_title,location,work_type,jo
 | `session_id` | string | Reference to session log |
 | `questions_count` | integer | Total questions in application |
 | `questions_unanswered` | integer | Questions not in profile |
-| `time_to_apply_seconds` | integer | Time from click to submit |
+| `time_to_apply_seconds` | integer | Time from click to submit (or blocker) |
 | `steps_count` | integer | Number of application steps |
 | `notes` | string | Any special notes |
+
+### Status Values
+
+| Status | Description |
+|--------|-------------|
+| `Applied` | Successfully submitted |
+| `Pending Manual` | Soft blocker - awaiting human completion (tab left open) |
+| `Skipped` | Hard blocker - could not complete |
+| `Interview` | Got interview (manual update) |
+| `Rejected` | Rejected (manual update) |
+| `Offer` | Received offer (manual update) |
+| `No Response` | No response after X days (manual update) |
 
 ## Responsibilities
 

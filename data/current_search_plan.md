@@ -1,71 +1,81 @@
 # Current Search Plan
 
-**Generated**: 2026-01-17
-**Status**: In Progress (First Session)
-**Last Updated**: 2026-01-17 12:40
+**Generated**: 2026-01-17 (Saturday afternoon)
+**Based on**: 10 total applications
+**Status**: Active
 
 ---
 
-## Search Queue
+## Analysis Summary
 
-| Priority | Keyword | Location | Status | Apps Found |
-|----------|---------|----------|--------|------------|
-| 1 | Associate Product Manager | Los Angeles, California | ✅ Done | 6 |
-| 2 | Product Manager | Los Angeles, California | ✅ Done | 4 |
-| 3 | Solutions Engineer | Los Angeles, California | ⏳ Pending | - |
-| 4 | Software Engineer | Los Angeles, California | ⏳ Pending | - |
-| 5 | AI Engineer | Los Angeles, California | ⏳ Pending | - |
-| 6 | Associate Product Manager | San Francisco, California | ⏳ Pending | - |
-| 7 | Product Manager | San Francisco, California | ⏳ Pending | - |
-| 8 | Solutions Engineer | San Francisco, California | ⏳ Pending | - |
-| 9 | Software Engineer | San Francisco, California | ⏳ Pending | - |
-| 10 | Associate Product Manager | United States (Remote) | ⏳ Pending | - |
-| 11 | Product Manager | United States (Remote) | ⏳ Pending | - |
-| 12 | Solutions Engineer | United States (Remote) | ⏳ Pending | - |
-| 13 | Full Stack Engineer | Los Angeles, California | ⏳ Pending | - |
-| 14 | Frontend Engineer | Los Angeles, California | ⏳ Pending | - |
-| 15 | ML Engineer | Los Angeles, California | ⏳ Pending | - |
+### Saturation Matrix
+
+| Keyword \ Location | Los Angeles | San Francisco | San Jose | Remote |
+|-------------------|-------------|---------------|----------|--------|
+| Associate Product Manager | 6 🟢 | 0 ⚪ | 0 ⚪ | 0 ⚪ |
+| Product Manager | 4 🟢 | 0 ⚪ | 0 ⚪ | 0 ⚪ |
+| Technical Product Manager | 0 ⚪ | 0 ⚪ | 0 ⚪ | 0 ⚪ |
+| Solutions Engineer | 0 ⚪ | 0 ⚪ | 0 ⚪ | 0 ⚪ |
+| Software Engineer | 0 ⚪ | 0 ⚪ | 0 ⚪ | 0 ⚪ |
+| AI Engineer | 0 ⚪ | 0 ⚪ | 0 ⚪ | 0 ⚪ |
+
+Legend: ⚪ None (0) | 🟢 Low (1-10) | 🟡 Medium (11-30) | 🟠 High (31-50) | 🔴 Saturated (50+)
 
 ---
 
-## Strategy Notes
+## Search Queue (in order)
 
-- **First session**: No application history, starting fresh
-- **Experience filters**: Entry level, Associate, Mid-Senior level
-- **Priority**: APM and PM roles first, then engineering roles
-- **Locations**: LA first, then SF, then Remote
+### Priority 1: FRESH - Never searched, high potential
+
+| # | Keyword | Location | Apps | Score | Status |
+|---|---------|----------|------|-------|--------|
+| 1 | Solutions Engineer | San Francisco, California | 0 | 6.0 | ⬜ Pending |
+| 2 | Software Engineer | San Francisco, California | 0 | 6.0 | ⬜ Pending |
+| 3 | Product Manager | San Francisco, California | 0 | 6.0 | ⬜ Pending |
+| 4 | Solutions Engineer | Los Angeles, California | 0 | 6.0 | ⬜ Pending |
+| 5 | Software Engineer | Los Angeles, California | 0 | 6.0 | ⬜ Pending |
+| 6 | AI Engineer | San Francisco, California | 0 | 6.0 | ⬜ Pending |
+| 7 | Solutions Engineer | San Jose, California | 0 | 6.0 | ⬜ Pending |
+| 8 | Product Manager | San Jose, California | 0 | 6.0 | ⬜ Pending |
+| 9 | Software Engineer | San Jose, California | 0 | 6.0 | ⬜ Pending |
+| 10 | Product Manager | United States (Remote) | 0 | 6.0 | ⬜ Pending |
+
+### Priority 2: REFRESH - Searched today, low saturation
+
+| # | Keyword | Location | Apps | Score | Status |
+|---|---------|----------|------|-------|--------|
+| 11 | Product Manager | Los Angeles, California | 4 | 2.1 | ⬜ Pending |
+| 12 | Associate Product Manager | Los Angeles, California | 6 | 1.9 | ⬜ Pending |
 
 ---
 
-## Progress
+## Progress Tracker
 
-- Session started: 2026-01-17
-- Searches completed: 2/15
-- Applications submitted: 10
-- **Next search**: Solutions Engineer in Los Angeles, California
+- [ ] Search 1: Solutions Engineer + San Francisco
+- [ ] Search 2: Software Engineer + San Francisco
+- [ ] Search 3: Product Manager + San Francisco
+- [ ] Search 4: Solutions Engineer + Los Angeles
+- [ ] Search 5: Software Engineer + Los Angeles
+- [ ] Search 6: AI Engineer + San Francisco
+- [ ] Search 7: Solutions Engineer + San Jose
+- [ ] Search 8: Product Manager + San Jose
+- [ ] Search 9: Software Engineer + San Jose
+- [ ] Search 10: Product Manager + Remote
 
 ---
 
-## Session 2026-01-17 Summary
+## Session Recommendation
 
-### Search 1: Associate Product Manager + Los Angeles
-- **Results**: 53 jobs
-- **Easy Apply Found**: 6+
-- **Applications**: 6
+- **Target Applications**: 20-30
+- **Estimated Searches Needed**: 4-6
+- **Focus Areas**: San Francisco (untouched), Solutions Engineer roles (zero apps)
+- **Strategy**: Diversify across new keywords and locations before revisiting LA
 
-### Search 2: Product Manager + Los Angeles  
-- **Results**: 99 jobs
-- **Easy Apply Found**: 4+
-- **Applications**: 4
+---
 
-### Companies Applied To:
-1. Lovie.co (APM search)
-2. TikTok (APM search)
-3. Platinum Enterprise (APM search)
-4. Crossing Hurdles (APM search)
-5. Beacon Hill (APM search)
-6. Informa (APM search)
-7. Milestone Technologies (PM search)
-8. INSPYR Solutions (PM search)
-9. Lithos Carbon (PM search)
-10. JobLeap AI (PM search)
+## Notes
+
+- San Francisco market completely untapped
+- Solutions Engineer keyword never searched (diversifies from PM roles)
+- Software Engineer keyword has high job volume
+- Los Angeles PM roles were searched today - new listings unlikely until tomorrow

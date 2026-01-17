@@ -4,6 +4,42 @@ Execute the **FULL AGENT ORCHESTRA** for non-Easy Apply (external) applications.
 
 ---
 
+## 🚨 CRITICAL RULES - READ FIRST
+
+### THE CORE PRINCIPLE: AUTONOMOUS OPERATION
+This is an **autonomous** job application agent. The user may leave their computer unattended expecting applications to continue. **A stopped session means missed opportunities.**
+
+### RULE #1: NEVER STOP THE SESSION FOR "FIT" REASONS
+**The session must NEVER stop because:**
+- ❌ Job requires more experience than candidate has
+- ❌ Salary seems too high/low
+- ❌ Role seems too senior/junior
+- ❌ Location isn't ideal
+- ❌ Any "this isn't a good match" judgment
+
+**If a suboptimal job is encountered**: Complete the application anyway, log concerns in notes, and continue to the next job. Let the human decide what's a good fit - the agent's job is to apply.
+
+### RULE #2: SOFT BLOCKERS → LEAVE TAB, CONTINUE SESSION
+When encountering verification requirements:
+1. **Leave the tab open** (do NOT close)
+2. **Log the blocker** in `logs/session_stops.md`
+3. **Return to LinkedIn tab**
+4. **Continue applying to other jobs**
+5. User will manually complete blocked applications later
+
+### RULE #3: LOG EVERY SESSION STOP
+Every session stop must be documented in `logs/session_stops.md`:
+- Context window limits
+- Rate limiting
+- Blockers (soft and hard)
+- Errors
+- User interrupts
+- Successful completion
+
+**If you don't log why the session stopped, the user has no way to debug or improve the system.**
+
+---
+
 ## ⚡ AGENTS TO ACTIVATE
 
 You MUST activate and follow ALL of these agents simultaneously:
@@ -136,11 +172,62 @@ Log page to performance tracker
 
 **Click Next/Continue/Submit**
 
-**Check for blockers:**
-- Account creation required → Attempt or flag
-- CAPTCHA → Flag for human, skip job
-- File upload → Upload `resume/Jayden_APM.pdf`
-- Error message → Log and attempt recovery
+**Check for blockers (see Blocker Categories):**
+
+---
+
+## Blocker Categories
+
+### ⏸️ SOFT BLOCKERS (Leave Tab Open, Continue Session)
+These blockers require human intervention but should NOT stop the session:
+
+| Blocker | Action | Log Entry |
+|---------|--------|-----------|
+| **Email verification code** | Leave tab open, continue session | Log in session_stops.md |
+| **Phone verification** | Leave tab open, continue session | Log in session_stops.md |
+| **Account creation email confirmation** | Leave tab open, continue session | Log in session_stops.md |
+| **MFA/2FA required** | Leave tab open, continue session | Log in session_stops.md |
+| **"Check your email" pages** | Leave tab open, continue session | Log in session_stops.md |
+
+**On Soft Blocker:**
+```
+1. Log application attempt in logs/applications/[date]_[company]_[role].md
+2. Add entry to logs/session_stops.md
+3. DO NOT close the tab
+4. Switch back to LinkedIn tab
+5. Continue with next application
+```
+
+### 🛑 HARD BLOCKERS (Skip Application, Continue Session)
+These blockers make the application impossible to complete:
+
+| Blocker | Action | Log Entry |
+|---------|--------|-----------|
+| **CAPTCHA/reCAPTCHA interactive** | Skip application | Log in session_stops.md |
+| **Mandatory assessment/test** | Skip application | Log in session_stops.md |
+| **Video interview required to apply** | Skip application | Log in session_stops.md |
+| **Security questions we can't answer** | Skip application | Log in session_stops.md |
+| **Broken/non-functional form** | Skip application | Log in session_stops.md |
+
+**On Hard Blocker:**
+```
+1. Log blocker in logs/session_stops.md
+2. Close the tab OR navigate back to LinkedIn
+3. Continue with next application
+```
+
+### ⚠️ NOT BLOCKERS (Continue Application)
+These are NOT reasons to stop. Log for reference but keep applying:
+
+| Issue | Action | Log Entry |
+|-------|--------|-----------|
+| **High experience requirements** | Continue application | Note in application log |
+| **Salary mismatch** | Continue application | Note in application log |
+| **Senior-level role** | Continue application | Note in application log |
+| **Missing optional fields** | Continue application | Skip optional fields |
+| **Location mismatch** | Continue application | Note in application log |
+
+---
 
 ### 4. On Confirmation Page
 
@@ -180,18 +267,48 @@ Navigate back to LinkedIn to continue with next job.
 
 ## Session End
 
-Triggers:
-- Context usage exceeds 80%
-- User interrupts
-- Too many blockers
+### Session End Triggers (ALWAYS LOG THE REASON)
 
-**Generate Summaries:**
+| Trigger | Category | Action |
+|---------|----------|--------|
+| All planned applications done | ✅ COMPLETED | Log success |
+| Context usage >80% | ⚠️ SYSTEM LIMIT | Save state, log reason |
+| Rate limiting detected | ⚠️ SYSTEM LIMIT | Save state, log reason |
+| Browser disconnected | ⚠️ SYSTEM LIMIT | Log error |
+| 3+ consecutive failures | ⚠️ SYSTEM LIMIT | Log errors, pause |
+| User interrupts | 🚫 USER INTERRUPT | Log current state |
+| Soft blocker encountered | ⏸️ SOFT BLOCKER | Leave tab open, log, continue OR end if no more jobs |
+
+### MANDATORY: Log Session Stop
+
+**Every session end MUST update `logs/session_stops.md` with:**
+
+```markdown
+### [DATE] - Session [#] ([Type])
+
+| Time | Company | Job Title | Stop Type | Reason | Tab Left Open | Resume Action |
+|------|---------|-----------|-----------|--------|---------------|---------------|
+| HH:MM | [Company] | [Title] | [Type] | [Reason] | ✅/❌ | [Action] |
+
+**Session Status**: [COMPLETED/PAUSED/ENDED]
+**Applications Attempted**: X
+**Applications Completed**: X
+**Applications Pending Manual**: X
+
+**Notes**:
+- [Context]
+```
+
+### Generate Summaries
 
 ```
 📊 EXTERNAL APPLICATION SESSION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Session End Reason: [REASON]
+
 Applications Attempted: X
 Successfully Completed: X
+Pending Manual Completion: X
 Blocked/Skipped: X
 
 By ATS:
@@ -201,6 +318,8 @@ By ATS:
   Custom: X
 
 Average Time: XX minutes per application
+
+Tabs Left Open: X (for manual completion)
 ```
 
 ```
@@ -212,26 +331,58 @@ Average Time: XX minutes per application
 Review these in logs/questions/ for accuracy!
 ```
 
+```
+⏸️ PENDING MANUAL COMPLETION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. [Company] - [Role] - [Blocker Reason]
+   Tab: Left open
+   Action: [What user needs to do]
+```
+
 ---
 
-## Files to Update (EVERY application)
+## Files to Update
+
+### On EVERY Application (Complete or Blocked)
 
 | File | What to Update |
 |------|----------------|
-| `data/applications.csv` | Add new row (mark as External) |
-| `logs/sessions/session_*.md` | Add application entry |
-| `logs/applications/*.md` | Create detailed record |
-| `logs/performance/current_session.md` | Add timing data |
+| `logs/applications/[date]_[company]_[role].md` | Create detailed record |
 | `logs/questions/all_questions.md` | Add all questions |
 | `logs/questions/unanswered.md` | Add unknown questions |
-| `logs/questions/patterns.md` | Add ATS-specific patterns |
+| `logs/performance/current_session.md` | Add timing data |
+
+### On COMPLETED Applications Only
+
+| File | What to Update |
+|------|----------------|
+| `data/applications.csv` | Add new row (mark as External, status=Applied) |
+| `logs/sessions/session_*.md` | Add application entry |
+
+### On BLOCKED Applications
+
+| File | What to Update |
+|------|----------------|
+| `data/applications.csv` | Add new row (status=Pending Manual) |
+| `logs/session_stops.md` | Add blocker entry |
+| `logs/applications/[date]_[company]_[role].md` | Include blocker details |
+
+### On EVERY Session End
+
+| File | What to Update |
+|------|----------------|
+| `logs/session_stops.md` | **MANDATORY** - Log session end reason |
+| `logs/sessions/session_*.md` | Update session summary |
 
 ---
 
-## Critical Rules
+## Critical Rules (PRIORITY ORDER)
 
-1. **DIRECTOR SUPERVISES, APPLICANT EXECUTES** - Clear separation
-2. **LOG ALL OPEN-ENDED QUESTIONS** - These need human review
-3. **TRACK TIME PER PAGE** - External apps have multiple pages
-4. **HANDLE BLOCKERS GRACEFULLY** - Skip if necessary, don't crash
-5. **SAVE GENERATED RESPONSES** - For quality review
+1. **🏆 COMPLETE APPLICATIONS NO MATTER WHAT** - Experience mismatches, salary, location are NOT reasons to stop
+2. **📝 LOG EVERY SESSION STOP** - Always document why a session ended
+3. **⏸️ SOFT BLOCKERS: LEAVE TAB OPEN, CONTINUE** - Don't close tabs with pending verifications
+4. **🔄 DIRECTOR SUPERVISES, APPLICANT EXECUTES** - Clear separation of concerns
+5. **📋 LOG ALL OPEN-ENDED QUESTIONS** - These need human review
+6. **⏱️ TRACK TIME PER PAGE** - External apps have multiple pages
+7. **💾 SAVE GENERATED RESPONSES** - For quality review
+8. **🔒 NEVER DELETE DATA** - Only append, never remove application records
