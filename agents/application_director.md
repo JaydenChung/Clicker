@@ -92,48 +92,76 @@ For each form field encountered:
 
 ## Open-Ended Question Handling
 
+### Data Sources for Answers
+The Director references these files to construct answers:
+1. **`config/personal_profile.md`** - Basic info, skills, salary expectations
+2. **`config/resume_content.md`** - Work history, achievements, education
+3. **`config/projects.md`** - Project portfolio, technical work
+4. **`config/interview_answers.md`** - Pre-written answers for common questions
+
 ### Question Categories & Response Strategies
 
 #### Category 1: "Why this company/role?"
 **Pattern**: "Why do you want to work at...", "What interests you about..."
+**Source**: `config/interview_answers.md` → "Why do you want to work at [Company]?" template
 **Strategy**: 
 - Extract company name and role from page
-- Generate personalized response using template
+- Use template from interview_answers.md
+- Fill in company-specific details from job posting
 - Keep concise (2-3 sentences)
 
-**Template**:
-```
-I'm excited about [COMPANY] because of [SOMETHING SPECIFIC FROM JOB/COMPANY]. 
-My background in [RELEVANT SKILL] aligns well with this [ROLE] position, 
-and I'm eager to contribute to [COMPANY MISSION/PRODUCT].
-```
-
-#### Category 2: Experience/Qualification
-**Pattern**: "Describe your experience with...", "Tell us about a time..."
+#### Category 2: "Tell me about yourself" / Background
+**Pattern**: "Tell me about yourself", "Walk me through your background"
+**Source**: `config/interview_answers.md` → "Tell me about yourself"
 **Strategy**:
-- Check personal_profile.md for relevant experience
-- If found, use that context
-- If not found, generate generic but professional response
-- Flag for human review
+- Use pre-written elevator pitch
+- Customize if role-specific details available
 
-#### Category 3: Salary Expectations
+#### Category 3: Experience/Technical Questions
+**Pattern**: "Describe your experience with...", "How many years of X..."
+**Source**: `config/resume_content.md` → Technical Skills, Work Experience
+**Strategy**:
+- Match technology to resume_content.md skills table
+- Reference specific projects from projects.md if relevant
+- Use years from personal_profile.md Experience Levels
+
+#### Category 4: Project/Achievement Questions
+**Pattern**: "Tell me about a project...", "Describe an accomplishment..."
+**Source**: `config/projects.md` → Featured Projects
+**Strategy**:
+- Select most relevant project based on job requirements
+- Use project description, challenges, and impact
+- Reference specific technologies used
+
+#### Category 5: Behavioral Questions
+**Pattern**: "Tell me about a time when...", "Describe a situation where..."
+**Source**: `config/interview_answers.md` → Experience Questions section
+**Strategy**:
+- Match to pre-written STAR format answers
+- Use Key Strengths examples from resume_content.md
+- If no match, flag for human review
+
+#### Category 6: Salary Expectations
 **Pattern**: "Expected salary", "Compensation requirements"
+**Source**: `config/personal_profile.md` → Salary Expectations
 **Strategy**:
 - Use value from personal_profile.md
 - If range requested, provide range from profile
 - Note if field is optional (skip if possible)
 
-#### Category 4: Availability
+#### Category 7: Availability
 **Pattern**: "Start date", "When can you start", "Notice period"
+**Source**: `config/personal_profile.md` → Availability
 **Strategy**:
 - Use value from personal_profile.md
 - Default: "2 weeks" or "Immediately" based on profile
 
-#### Category 5: Additional Information
+#### Category 8: Additional Information
 **Pattern**: "Anything else...", "Additional comments"
+**Source**: `config/interview_answers.md` → optional
 **Strategy**:
 - Usually optional - can skip
-- If required, use brief professional statement
+- If required, use brief professional statement from interview_answers.md
 - Never leave required fields empty
 
 ### Response Generation Rules

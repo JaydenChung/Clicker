@@ -41,7 +41,10 @@ Clicker/
 ├── config/                   # Configuration (⚠️ EDIT THESE FIRST!)
 │   ├── job_preferences.md    # Job titles, keywords, filters
 │   ├── locations.md          # Target cities and regions
-│   └── personal_profile.md   # Your info for application answers
+│   ├── personal_profile.md   # Your info for application answers
+│   ├── resume_content.md     # Detailed resume for open-ended questions
+│   ├── projects.md           # Project portfolio
+│   └── interview_answers.md  # Pre-written answers for common questions
 │
 ├── agents/                   # 9 specialized agents
 │   ├── search_strategist.md  # Plans optimal search strategy
@@ -90,6 +93,31 @@ Define your target jobs:
 ### 3. Locations (`config/locations.md`)
 
 Set target locations in priority order.
+
+### 4. Resume Content (`config/resume_content.md`)
+
+Detailed resume data for answering open-ended questions:
+- Work experience with achievements
+- Technical skills with proficiency levels
+- Education details
+- Key strengths with examples
+
+### 5. Projects (`config/projects.md`)
+
+Your project portfolio:
+- Featured projects with descriptions
+- Technologies used
+- Challenges and solutions
+- Links to demos/GitHub
+
+### 6. Interview Answers (`config/interview_answers.md`)
+
+Pre-written answers for common questions:
+- "Tell me about yourself"
+- "Why this company?"
+- Behavioral questions (STAR format)
+- Technical questions
+- Career goals
 
 ---
 
