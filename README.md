@@ -43,8 +43,7 @@ Clicker/
 │   ├── locations.md          # Target cities and regions
 │   ├── personal_profile.md   # Your info for application answers
 │   ├── resume_content.md     # Detailed resume for open-ended questions
-│   ├── projects.md           # Project portfolio
-│   └── interview_answers.md  # Pre-written answers for common questions
+│   └── projects.md           # Project portfolio
 │
 ├── agents/                   # 9 specialized agents
 │   ├── search_strategist.md  # Plans optimal search strategy
@@ -109,15 +108,6 @@ Your project portfolio:
 - Technologies used
 - Challenges and solutions
 - Links to demos/GitHub
-
-### 6. Interview Answers (`config/interview_answers.md`)
-
-Pre-written answers for common questions:
-- "Tell me about yourself"
-- "Why this company?"
-- Behavioral questions (STAR format)
-- Technical questions
-- Career goals
 
 ---
 

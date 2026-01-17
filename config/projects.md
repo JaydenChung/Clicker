@@ -1,186 +1,208 @@
 # Projects Portfolio
 
 > This file contains your project portfolio that agents use to answer questions about your work.
-> Include personal projects, open source contributions, and notable professional projects.
+> Source: LaTeX resume at `/resume/` folder
 
 ---
 
 ## Featured Projects
 
-### Project 1: <!-- FILL IN: Project Name -->
+### Project 1: High-Note
 
-- **Type**: <!-- FILL IN: Personal / Professional / Open Source / Academic -->
-- **Role**: <!-- FILL IN: e.g., "Solo Developer" / "Tech Lead" / "Contributor" -->
-- **Duration**: <!-- FILL IN: e.g., "3 months" / "Ongoing" -->
-- **Status**: <!-- FILL IN: Completed / In Progress / Maintained -->
+- **Type**: Hackathon / Personal
+- **Role**: Team Lead & Full-Stack Developer
+- **Duration**: 36 hours (CruzHacks 2025)
+- **Status**: Completed
+- **Award**: 🏆 1st Place - Best Education Hack
 
 **Links**:
-- **Live Demo**: <!-- FILL IN: URL or "N/A" -->
-- **GitHub**: <!-- FILL IN: URL or "Private" -->
-- **Documentation**: <!-- FILL IN: URL or "N/A" -->
+- **Live Demo**: <!-- Add if available -->
+- **GitHub**: <!-- Add GitHub URL -->
+- **Documentation**: <!-- Add if available -->
 
 **Description**:
-<!-- FILL IN: 2-3 sentence description of the project -->
+AI-powered collaborative study assistant that leverages Natural Language Processing (NLP) and Google Gemini API to analyze student notes, providing personalized feedback and comparative insights.
 
 **Problem Solved**:
-<!-- FILL IN: What problem does this project solve? -->
+Students often struggle to identify gaps in their understanding when studying alone. High-Note analyzes notes and provides AI-powered feedback to help students learn more effectively.
 
 **Technologies Used**:
-<!-- FILL IN: List all technologies, frameworks, tools -->
-- 
+- FastAPI (Python) - Backend
+- React (JavaScript) - Frontend
+- MongoDB - Database
+- Google Gemini API - AI/NLP
+- Natural Language Processing
 
 **Key Features**:
-<!-- FILL IN: List main features -->
-- 
-- 
-- 
+- AI-powered note analysis
+- Personalized feedback generation
+- Comparative insights between students
+- Collaborative study features
 
 **Challenges & Solutions**:
-<!-- FILL IN: Notable technical challenges you overcame -->
-- **Challenge**: <!-- FILL IN -->
-  **Solution**: <!-- FILL IN -->
+- **Challenge**: Building a full product in 36 hours
+  **Solution**: Rapid prototyping, clear task delegation, focused MVP scope
+
+- **Challenge**: Integrating AI analysis with real-time feedback
+  **Solution**: Used Google Gemini API with async processing for responsive UX
 
 **Impact/Results**:
-<!-- FILL IN: Quantifiable results if possible -->
-- 
+- Won 1st Place "Best Education Hack" at CruzHacks 2025
+- Demonstrated meaningful impact in education technology
+- Managed team of 3 to deliver from concept to completion
 
 **What I Learned**:
-<!-- FILL IN: Key learnings from this project -->
-- 
+- Full-stack development under extreme time pressure
+- AI/NLP integration with FastAPI
+- Team leadership and rapid prototyping
 
 ---
 
-### Project 2: <!-- FILL IN: Project Name -->
+### Project 2: Ye Guild Clerk! (Video Game)
 
-- **Type**: <!-- FILL IN -->
-- **Role**: <!-- FILL IN -->
-- **Duration**: <!-- FILL IN -->
-- **Status**: <!-- FILL IN -->
+- **Type**: Professional / Commercial
+- **Role**: Publisher & Project Manager
+- **Duration**: Aug 2024 - April 2025 (9 months)
+- **Status**: Released on Steam
 
 **Links**:
-- **Live Demo**: <!-- FILL IN -->
-- **GitHub**: <!-- FILL IN -->
+- **Steam**: <!-- Add Steam URL -->
+- **GitHub**: Private
 
 **Description**:
-<!-- FILL IN -->
+A Unity (C#) 2.5D video game released on Steam. Managed the full production lifecycle from concept through release, including development documentation, team coordination, and platform compliance.
 
 **Problem Solved**:
-<!-- FILL IN -->
+Coordinated a game development team to ship a commercial product, bridging the gap between engine limitations and creative vision.
 
 **Technologies Used**:
-- 
+- Unity Game Engine
+- C# Programming
+- Steam SDK
+- Build/Deployment pipelines
 
 **Key Features**:
-- 
-- 
+- 2.5D gameplay mechanics
+- Full Steam integration
+- Production-ready build pipeline
 
 **Challenges & Solutions**:
-- **Challenge**: <!-- FILL IN -->
-  **Solution**: <!-- FILL IN -->
+- **Challenge**: Steam build validation errors blocking deployment
+  **Solution**: Systematic debugging and compliance fixes to meet platform requirements
+
+- **Challenge**: Bridging technical limitations with art team's creative requirements
+  **Solution**: Created comprehensive documentation and technical guides
 
 **Impact/Results**:
-- 
+- Successfully released on Steam
+- Full technical compliance achieved
+- Team successfully coordinated through entire development lifecycle
+
+**What I Learned**:
+- Game development production management
+- Steam deployment process
+- Technical documentation for non-technical teams
 
 ---
 
-### Project 3: <!-- FILL IN: Project Name -->
+### Project 3: Chess AI
 
-- **Type**: <!-- FILL IN -->
-- **Role**: <!-- FILL IN -->
-- **Duration**: <!-- FILL IN -->
-- **Status**: <!-- FILL IN -->
+- **Type**: Academic / Personal
+- **Role**: Solo Developer
+- **Duration**: University project
+- **Status**: Completed
 
 **Links**:
-- **Live Demo**: <!-- FILL IN -->
-- **GitHub**: <!-- FILL IN -->
+- **GitHub**: <!-- Add GitHub URL -->
 
 **Description**:
-<!-- FILL IN -->
+High-performance Chess engine and AI developed in C++ with graphical user interface. Implements advanced algorithms for competitive play.
+
+**Problem Solved**:
+Created an AI opponent capable of playing chess at a competitive level through efficient search algorithms and position evaluation.
 
 **Technologies Used**:
-- 
+- C++
+- Minimax algorithm
+- Alpha-beta pruning
+- GUI development
 
 **Key Features**:
-- 
+- Minimax search algorithm with alpha-beta pruning
+- Move ordering for search efficiency
+- Hashless transposition table
+- Optimized board position evaluation
+- Graphical user interface
 
----
+**Challenges & Solutions**:
+- **Challenge**: Performance optimization for deep search
+  **Solution**: Implemented alpha-beta pruning and move ordering to reduce search space
 
-## Open Source Contributions
+- **Challenge**: Accurate position evaluation
+  **Solution**: Developed custom evaluation heuristics for board assessment
 
-### Contribution 1
+**Impact/Results**:
+- Achieved competitive AI play level
+- Demonstrated advanced algorithm implementation
+- Clean, efficient C++ codebase
 
-- **Project**: <!-- FILL IN: Project name -->
-- **Repository**: <!-- FILL IN: GitHub URL -->
-- **Contribution Type**: <!-- FILL IN: Bug fix / Feature / Documentation -->
-- **Description**: <!-- FILL IN: What you contributed -->
-- **PR/Issue Link**: <!-- FILL IN: URL -->
-
----
-
-## Academic Projects
-
-### Project: <!-- FILL IN: Project Name -->
-
-- **Course**: <!-- FILL IN: Course name -->
-- **University**: <!-- FILL IN -->
-- **Team Size**: <!-- FILL IN: e.g., "Solo" / "Team of 4" -->
-
-**Description**:
-<!-- FILL IN -->
-
-**Technologies Used**:
-- 
-
-**Grade/Recognition**: <!-- FILL IN: Optional -->
+**What I Learned**:
+- Game AI and search algorithms
+- Performance optimization in C++
+- GUI development
 
 ---
 
 ## Hackathon Projects
 
-### Hackathon: <!-- FILL IN: Hackathon Name -->
+### CruzHacks 2025 - High-Note
+- **Date**: April 2025
+- **Project**: High-Note (AI Study Assistant)
+- **Team Size**: 3
+- **Placement**: 🏆 1st Place - Best Education Hack
+- **Technologies**: FastAPI, React, MongoDB, Google Gemini API
 
-- **Date**: <!-- FILL IN -->
-- **Project**: <!-- FILL IN: Project name -->
-- **Team Size**: <!-- FILL IN -->
-- **Placement**: <!-- FILL IN: e.g., "1st Place" / "Finalist" / "Participant" -->
-
-**Description**:
-<!-- FILL IN: What you built in the hackathon -->
-
-**Technologies Used**:
-- 
+### CruzHacks 2023 - Winner
+- **Date**: February 2023
+- **Project**: <!-- Add project name if known -->
+- **Team Size**: <!-- Add team size -->
+- **Placement**: 🏆 Winner - Most Ambitious Hack
+- **Description**: Won for demonstrating bold scope and creative execution
 
 ---
 
-## Side Projects & Experiments
+## Professional Projects
 
-### <!-- FILL IN: Project Name -->
+### Paystand - Multi-Agent Development Workflow
+- **Type**: Professional
+- **Role**: Solutions Engineer
+- **Description**: Designed a context-aware, multi-agent workflow that automates the development lifecycle (Requirements → Code Gen → Validation)
+- **Impact**: Reduced manual error rates in production
+- **Technologies**: AI/ML, Automation, Python
 
-- **Purpose**: <!-- FILL IN: Why you built this -->
-- **Technologies**: <!-- FILL IN -->
-- **Link**: <!-- FILL IN -->
+### Paystand - Sales Demo Environment
+- **Type**: Professional
+- **Role**: Solutions Engineer
+- **Description**: Developed sales demo environment for client presentations
+- **Impact**: Helped secure $100,000 TCV before production
 
 ---
 
 ## Portfolio Links
 
-- **Personal Website**: <!-- FILL IN: URL -->
-- **GitHub Profile**: <!-- FILL IN: URL -->
-- **LinkedIn**: <!-- FILL IN: URL -->
-- **Blog/Medium**: <!-- FILL IN: URL -->
-- **Dribbble/Behance**: <!-- FILL IN: URL (for design work) -->
-- **YouTube/Twitch**: <!-- FILL IN: URL (for content creation) -->
-- **Stack Overflow**: <!-- FILL IN: URL -->
-- **Twitter/X**: <!-- FILL IN: URL -->
+- **Personal Website**: https://jaydenchung.com/
+- **GitHub Profile**: https://github.com/JaydenChung
+- **LinkedIn**: https://www.linkedin.com/in/jayden-chung-1ba694266/
+- **Blog/Medium**: <!-- Add if applicable -->
+- **Steam Developer**: <!-- Add if applicable -->
 
 ---
 
 ## Notes for Agent
 
-- Reference specific projects when asked "Tell me about a project you've worked on"
-- Use Challenges & Solutions for "Describe a difficult problem you solved"
-- Use Impact/Results for "What was the outcome of your work"
+- Reference High-Note for "Tell me about a project you've worked on" - it's the most impressive (1st place winner)
+- Use Chess AI for technical/algorithm questions
+- Use Ye Guild Clerk! for project management and shipping questions
+- Use Paystand projects for professional/enterprise experience questions
+- Mention hackathon wins to demonstrate competitive achievement
 - Match project technologies to job requirements when possible
-- Prioritize Featured Projects for "most impressive work" questions
-- Use Open Source Contributions to demonstrate collaboration skills
-
