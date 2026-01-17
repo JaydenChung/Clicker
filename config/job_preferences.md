@@ -34,9 +34,10 @@ Search for jobs containing ANY of these keywords:
 - [ ] Temporary
 
 ## Experience Level
+- [x] Internship
 - [x] Entry level
 - [x] Associate
-- [x] Mid-Senior level
+- [ ] Mid-Senior level
 - [ ] Director
 - [ ] Executive
 
@@ -71,6 +72,20 @@ Search for jobs containing ANY of these keywords:
 - **Minimum**: $80,000
 - **Preferred**: $120,000+
 - **Open to negotiation**: Yes
+
+---
+
+## Session Settings
+
+### Application Limits
+- **max_applications_per_session**: 10
+  <!-- Set to 10 for testing; increase for production runs -->
+  <!-- Set to 0 for unlimited -->
+
+### Session Logging
+- **log_session_start**: Yes
+- **log_session_end**: Yes
+  <!-- Always log when session starts and ends with timestamps -->
 
 ---
 

@@ -264,7 +264,7 @@ LOG_QUESTION: {
 **Email/Phone Verification Required:**
 ```
 1. Log the blocker in logs/session_stops.md
-2. Log application details in logs/applications/[date]_[company]_[role].md
+2. Log application details in logs/applications/session_{session_id}_external/[date]_[company]_[role].md
 3. DO NOT close the tab
 4. Switch back to LinkedIn tab
 5. Continue with next application

@@ -27,14 +27,21 @@ When encountering verification requirements:
 4. **Continue applying to other jobs**
 5. User will manually complete blocked applications later
 
-### RULE #3: LOG EVERY SESSION STOP
+### RULE #3: EXTERNAL JOBS ONLY - SKIP EASY APPLY
+This command is **ONLY** for non-Easy Apply jobs:
+- ✅ Apply to jobs that redirect to external company websites
+- ❌ SKIP all jobs with "Easy Apply" button
+- ❌ NEVER apply to Easy Apply jobs during this session
+
+**If a job shows "Easy Apply"**: Skip it and move to the next job. Easy Apply jobs are handled by the `/apply-jobs` command, not this one.
+
+### RULE #4: LOG EVERY SESSION STOP
 Every session stop must be documented in `logs/session_stops.md`:
-- Context window limits
-- Rate limiting
 - Blockers (soft and hard)
 - Errors
 - User interrupts
 - Successful completion
+- No more external jobs available
 
 **If you don't log why the session stopped, the user has no way to debug or improve the system.**
 
@@ -82,17 +89,30 @@ agents/application_tracker.md    - Application logging instructions
 
 ### 1. Initialize
 - Load all config files
-- Create session log
+- Read `max_applications_per_session` from `/config/job_preferences.md`
+- **Log session START** to `logs/session_stops.md` with:
+  - Session ID, start timestamp
+  - Type: External
+  - Max applications planned
+- Create session folder: `logs/applications/session_{id}_external/`
+- Create session log in `logs/sessions/`
 - Initialize performance tracking
 - Confirm resume PDF path
 
 ### 2. For Each Non-Easy Apply Job
 
+**⚠️ JOB SELECTION RULES:**
+- ONLY select jobs that do NOT have an "Easy Apply" button
+- If a job shows "Easy Apply" → SKIP IT, move to next job
+- Look for regular "Apply" button that redirects externally
+- If no more external jobs found → End session
+
 **Director: Analyze LinkedIn Job Page**
-1. Identify company name, job title
-2. Click "Apply" button (not Easy Apply)
-3. Handle redirect to external site
-4. Identify ATS system from URL/page structure
+1. Verify job does NOT have "Easy Apply" button (if it does, SKIP)
+2. Identify company name, job title
+3. Click "Apply" button (must redirect to external site)
+4. Handle redirect to external site
+5. Identify ATS system from URL/page structure
 
 **ATS System Reference:**
 | ATS | URL Pattern | Complexity |
@@ -191,12 +211,19 @@ These blockers require human intervention but should NOT stop the session:
 
 **On Soft Blocker:**
 ```
-1. Log application attempt in logs/applications/[date]_[company]_[role].md
+1. Log application attempt in logs/applications/session_{session_id}_external/[date]_[company]_[role].md
 2. Add entry to logs/session_stops.md
 3. DO NOT close the tab
 4. Switch back to LinkedIn tab
-5. Continue with next application
+5. Find next NON-Easy Apply job (SKIP any Easy Apply jobs)
+6. Continue with next EXTERNAL application only
 ```
+
+**⚠️ IMPORTANT**: After returning to LinkedIn, you MUST:
+- Look for jobs WITHOUT the "Easy Apply" button
+- SKIP all jobs that show "Easy Apply" - these are for the `/apply-jobs` command
+- Only click "Apply" on jobs that redirect to external sites
+- If no more external jobs are found, end the session
 
 ### 🛑 HARD BLOCKERS (Skip Application, Continue Session)
 These blockers make the application impossible to complete:
@@ -213,7 +240,8 @@ These blockers make the application impossible to complete:
 ```
 1. Log blocker in logs/session_stops.md
 2. Close the tab OR navigate back to LinkedIn
-3. Continue with next application
+3. Find next NON-Easy Apply job (SKIP any Easy Apply jobs)
+4. Continue with next EXTERNAL application only
 ```
 
 ### ⚠️ NOT BLOCKERS (Continue Application)
@@ -261,7 +289,21 @@ These are NOT reasons to stop. Log for reference but keep applying:
 
 ### 6. Return to LinkedIn
 
-Navigate back to LinkedIn to continue with next job.
+Navigate back to LinkedIn to find the next **EXTERNAL** job:
+
+```
+1. Switch to LinkedIn tab
+2. Scroll through job listings
+3. FOR each job in list:
+   - IF job has "Easy Apply" button → SKIP (do not click)
+   - IF job has regular "Apply" button → SELECT for external application
+4. IF no more external jobs found:
+   - Log "No more external jobs available" in session_stops.md
+   - End session
+5. ELSE: Continue with next external application
+```
+
+**⚠️ NEVER apply to Easy Apply jobs during an external session.**
 
 ---
 
@@ -271,13 +313,13 @@ Navigate back to LinkedIn to continue with next job.
 
 | Trigger | Category | Action |
 |---------|----------|--------|
-| All planned applications done | ✅ COMPLETED | Log success |
-| Context usage >80% | ⚠️ SYSTEM LIMIT | Save state, log reason |
-| Rate limiting detected | ⚠️ SYSTEM LIMIT | Save state, log reason |
+| All external applications done | ✅ COMPLETED | Log success |
+| No more external jobs found | ✅ COMPLETED | Log "no more external jobs in results" |
+| Only Easy Apply jobs remaining | ✅ COMPLETED | Log "only Easy Apply jobs remaining - use /apply-jobs" |
+| `max_applications_per_session` reached | ✅ COMPLETED | Log limit reached |
 | Browser disconnected | ⚠️ SYSTEM LIMIT | Log error |
 | 3+ consecutive failures | ⚠️ SYSTEM LIMIT | Log errors, pause |
 | User interrupts | 🚫 USER INTERRUPT | Log current state |
-| Soft blocker encountered | ⏸️ SOFT BLOCKER | Leave tab open, log, continue OR end if no more jobs |
 
 ### MANDATORY: Log Session Stop
 

@@ -63,6 +63,9 @@ _Log of past recommendations and their effectiveness_
 | 2026-01-17 | Focus on San Francisco (untapped) | Pending | - |
 | 2026-01-17 | Add Solutions Engineer keyword | Pending | - |
 | 2026-01-17 | Diversify from PM roles | Pending | - |
+| 2026-01-17 | Expand to San Jose | Pending | - |
+| 2026-01-17 | Try Remote jobs | Pending | - |
+| 2026-01-17 | Add Software Engineer searches | Pending | - |
 
 ---
 

@@ -26,14 +26,17 @@ When encountering verification requirements:
 
 **Action**: Log blocker → Leave tab open → Return to LinkedIn → Continue applying
 
-### RULE #3: LOG EVERY SESSION STOP
-**Every time a session ends, document WHY in `logs/session_stops.md`:**
-- Context window limits
-- Rate limiting
-- Blockers (soft and hard)
-- Errors
-- User interrupts
-- Successful completion
+### RULE #3: LOG EVERY SESSION START AND END
+**Every session must be documented in `logs/session_stops.md`:**
+
+**🟢 SESSION START:**
+- Session ID, start timestamp, type (Easy Apply / External)
+- `max_applications_per_session` from `/config/job_preferences.md`
+
+**🔴 SESSION END:**
+- End timestamp, duration
+- Stop reason: Limit reached / Plan exhausted / Errors / User interrupt
+- Applications completed count
 
 **If you don't log it, the user can't debug or improve the system.**
 
@@ -68,10 +71,11 @@ This command:
 
 This command:
 1. Reads the search plan from `/data/current_search_plan.md`
-2. Executes searches in priority order
-3. Applies to **Easy Apply jobs only**
-4. Updates CSV tracker after each application
-5. Ends when context fills or plan complete
+2. Reads `max_applications_per_session` from `/config/job_preferences.md`
+3. Executes searches in priority order
+4. Applies to **Easy Apply jobs only**
+5. Updates CSV tracker after each application
+6. Ends when `max_applications_per_session` reached or plan complete
 
 ### Command 3: Apply External
 **Triggers**: "apply external", "external applications", "non-easy apply", "apply to external jobs"
@@ -240,8 +244,10 @@ Before starting ANY session:
 │  1. Verify browser on LinkedIn, signed in               │
 │  2. Load /data/current_search_plan.md                   │
 │  3. Load /config/personal_profile.md                    │
-│  4. Create session log                                  │
-│  5. Navigate to Jobs if needed                          │
+│  4. Load /config/job_preferences.md for max_applications│
+│  5. LOG SESSION START to logs/session_stops.md          │
+│  6. Create session log in logs/sessions/                │
+│  7. Navigate to Jobs if needed                          │
 └─────────────────────────────────────────────────────────┘
                           │
                           ▼
@@ -251,9 +257,13 @@ Before starting ANY session:
 │    1. Enter keyword in search box                       │
 │    2. Enter location                                    │
 │    3. Execute search                                    │
-│    4. Mark search as in-progress in plan                │
-│    5. → Application Loop                                │
-│    6. Mark search as complete when done                 │
+│    4. APPLY EXPERIENCE LEVEL FILTERS:                   │
+│       ✅ Internship                                     │
+│       ✅ Entry level                                    │
+│       ✅ Associate                                      │
+│    5. Mark search as in-progress in plan                │
+│    6. → Application Loop                                │
+│    7. Mark search as complete when done                 │
 └─────────────────────────────────────────────────────────┘
                           │
                           ▼
@@ -274,11 +284,12 @@ Before starting ANY session:
 ┌─────────────────────────────────────────────────────────┐
 │              SESSION END                                 │
 │  Triggers:                                              │
-│    - Context > 80% used                                 │
+│    - max_applications_per_session reached               │
 │    - Search plan exhausted                              │
-│    - Rate limit detected                                │
+│    - Error threshold exceeded (5+ consecutive failures) │
 │    - User interrupts                                    │
 │  Actions:                                               │
+│    - LOG SESSION END to logs/session_stops.md           │
 │    - Save all data to CSV                               │
 │    - Finalize logs                                      │
 │    - Update search plan progress                        │
@@ -492,19 +503,19 @@ The master CSV at `/data/applications.csv` can be imported to Google Sheets:
 4. If fails: Log to stuck_log, try next field
 
 ### Rate Limit Detected
-1. Log detection
-2. Save all data to CSV
-3. End session gracefully
-4. Report to user
+1. Log detection to performance monitor
+2. Wait 30 seconds
+3. Continue applying (do NOT end session)
 
 ---
 
-## Session Context Management
+## Session Settings
 
-### Context Budget
-- Reserve 20% context for session wrap-up
-- Begin wrap-up at 80% usage
-- ALWAYS save CSV before ending
+### Application Limit
+- Read `max_applications_per_session` from `/config/job_preferences.md`
+- Default: 10 (for testing)
+- Set to 0 for unlimited
+- Session ends when limit is reached
 
 ### On Session End (CRITICAL)
 1. Save current application to CSV (if in progress)
@@ -521,12 +532,12 @@ The master CSV at `/data/applications.csv` can be imported to Google Sheets:
 ## Safety Rules (PRIORITY ORDER)
 
 1. **🏆 COMPLETE APPLICATIONS NO MATTER WHAT** - Experience mismatches, salary, location are NOT reasons to stop
-2. **📝 LOG EVERY SESSION STOP** - Always document why a session ended in `logs/session_stops.md`
+2. **📝 LOG SESSION START AND END** - Always document in `logs/session_stops.md` with timestamps
 3. **⏸️ SOFT BLOCKERS: LEAVE TAB OPEN** - Don't close tabs with pending verifications, continue session
 4. **💾 Always save to CSV** after each application (complete or blocked)
 5. **🔒 Never delete CSV data** - only append
 6. **📋 Log everything** for human review
-7. **⚠️ Respect rate limits** - stop if detected, log the reason
+7. **🔢 Respect application limit** - stop when `max_applications_per_session` reached
 
 ---
 

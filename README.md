@@ -132,8 +132,9 @@ When encountering verification requirements:
 
 ### Rule #3: Log Every Session Stop
 Every session stop is documented in `logs/session_stops.md`:
-- Context window limits
-- Rate limiting
+- **Session START** with timestamp, session ID, max applications planned
+- **Session END** with timestamp, stop reason, applications completed
+- Application limit reached (`max_applications_per_session` from config)
 - Blockers (soft and hard)
 - Errors
 - User interrupts
@@ -184,7 +185,9 @@ Clicker/
 ├── logs/                      # 📝 SESSION LOGS
 │   ├── session_stops.md       # 🚨 All session stop reasons
 │   ├── sessions/              # Per-session search logs
-│   ├── applications/          # Individual application records
+│   ├── applications/          # Application records (organized by session)
+│   │   ├── _index.md          # Master index of all applications
+│   │   └── session_{id}_{type}/ # Session folders (easy-apply or external)
 │   ├── questions/             # Question database
 │   └── performance/           # Timing metrics
 │
@@ -254,7 +257,8 @@ Place your PDF resume in the `resume/` folder for external applications.
 │ → 6 agents activate simultaneously                 │
 │ → Follows the search plan                          │
 │ → Updates CSV after each application               │
-│ → Continues until context full or plan complete    │
+│ → Continues until max_applications reached or plan │
+│   complete (limit set in config/job_preferences.md)│
 └────────────────────────────────────────────────────┘
                       │
                       ▼
@@ -346,8 +350,9 @@ The master CSV at `data/applications.csv` tracks **ALL applications** across **A
 - **CSV saves after each application** - No data loss
 - **No duplicate applications** - Skips "Applied" badges
 - **Graceful session end** - Completes current app first
-- **Rate limit detection** - Stops if LinkedIn limits detected
-- **Complete logging** - Everything tracked in `logs/session_stops.md`
+- **Configurable application limit** - `max_applications_per_session` in config (default: 10)
+- **Session start/end logging** - Every session documented in `logs/session_stops.md`
+- **Complete logging** - Everything tracked for review
 - **Soft blocker handling** - Leaves tabs open, continues session
 
 ---
@@ -375,8 +380,8 @@ Check `logs/session_stops.md` for the reason and category.
 ### "Application pending manual"
 A soft blocker occurred. Find the open tab and complete manually.
 
-### "Rate limited"
-Wait and try again later. LinkedIn has daily limits.
+### "Session ended at 10 applications"
+This is the default `max_applications_per_session` limit. Change it in `config/job_preferences.md` under Session Settings.
 
 ---
 

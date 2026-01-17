@@ -165,6 +165,11 @@ Save the current plan to `/data/current_search_plan.md` so the Job Applicant Age
 **Generated**: YYYY-MM-DD HH:MM
 **Status**: Active
 
+## Experience Level Filters (ALWAYS APPLY)
+- [x] Internship
+- [x] Entry level
+- [x] Associate
+
 ## Search Queue (in order)
 
 1. keyword: "Solutions Engineer", location: "San Jose, California"
