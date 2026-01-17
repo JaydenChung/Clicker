@@ -1,9 +1,10 @@
 # LinkedIn Job Application Automation - Cursor Rules
 
 ## Overview
-This is an automated job application system for LinkedIn with **two main commands**:
+This is an automated job application system for LinkedIn with **three main commands**:
 1. **Plan Search** - Analyzes data and creates an optimal search strategy
-2. **Apply to Jobs** - Executes applications based on the search plan
+2. **Apply to Jobs** - Executes Easy Apply applications based on the search plan
+3. **Apply External** - Handles non-Easy Apply jobs on external websites
 
 ## Quick Start Commands
 
@@ -16,15 +17,25 @@ This command:
 3. Generates a prioritized search plan
 4. Saves plan to `/data/current_search_plan.md`
 
-### Command 2: Apply to Jobs  
-**Triggers**: "apply to jobs", "start applying", "apply"
+### Command 2: Apply to Jobs (Easy Apply)
+**Triggers**: "apply to jobs", "start applying", "apply", "easy apply"
 
 This command:
 1. Reads the search plan from `/data/current_search_plan.md`
 2. Executes searches in priority order
-3. Applies to Easy Apply jobs
+3. Applies to **Easy Apply jobs only**
 4. Updates CSV tracker after each application
 5. Ends when context fills or plan complete
+
+### Command 3: Apply External
+**Triggers**: "apply external", "external applications", "non-easy apply", "apply to external jobs"
+
+This command:
+1. Handles jobs that redirect to external company websites
+2. Activates Application Director (supervisor) and External Applicant (executor)
+3. Navigates various ATS systems (Workday, Greenhouse, Lever, etc.)
+4. Handles open-ended questions with generated responses
+5. Flags complex situations for human review
 
 ---
 
@@ -34,10 +45,11 @@ Before starting ANY session:
 - [ ] LinkedIn is loaded and user is SIGNED IN
 - [ ] Browser is on LinkedIn homepage or Jobs page
 - [ ] Config files filled out in `/config/` directory
+- [ ] For external apps: Resume file accessible for upload
 
 ---
 
-## Agent Roles (7 Agents)
+## Agent Roles (9 Agents)
 
 ### 1. Search Strategist Agent (PLANNING)
 **File**: `agents/search_strategist.md`
@@ -49,7 +61,7 @@ Before starting ANY session:
 - Predict optimal search combinations
 - Learn from past session effectiveness
 
-### 2. Job Applicant Agent (EXECUTION)
+### 2. Job Applicant Agent (EASY APPLY EXECUTION)
 **File**: `agents/job_applicant.md`
 **Trigger**: "apply to jobs" command
 **Responsibilities**:
@@ -60,7 +72,28 @@ Before starting ANY session:
 - Submit applications
 - Coordinate with other agents
 
-### 3. CSV Tracker Agent (PERSISTENT DATA)
+### 3. Application Director Agent (EXTERNAL SUPERVISOR)
+**File**: `agents/application_director.md`
+**Trigger**: "apply external" command or when external site detected
+**Responsibilities**:
+- Analyze external page states
+- Identify ATS systems (Workday, Greenhouse, etc.)
+- Direct the External Applicant step-by-step
+- Handle open-ended questions
+- Decide skip vs. continue on blockers
+- Track multi-page form progress
+
+### 4. External Applicant Agent (EXTERNAL EXECUTOR)
+**File**: `agents/external_applicant.md`
+**Trigger**: Directed by Application Director
+**Responsibilities**:
+- Navigate external websites
+- Fill form fields as directed
+- Handle file uploads
+- Execute clicks and selections
+- Report results back to Director
+
+### 5. CSV Tracker Agent (PERSISTENT DATA)
 **File**: `agents/csv_tracker.md`
 **Trigger**: After each successful application
 **Responsibilities**:
@@ -69,15 +102,15 @@ Before starting ANY session:
 - Provide data for Google Sheets import
 - Calculate statistics on demand
 
-### 4. Search Logger Agent
+### 6. Search Logger Agent
 **File**: `agents/search_logger.md`
-**Trigger**: During "apply to jobs" sessions
+**Trigger**: During application sessions
 **Responsibilities**:
 - Create session log in `logs/sessions/`
 - Track searches performed this session
 - Update search plan progress
 
-### 5. Application Tracker Agent
+### 7. Application Tracker Agent
 **File**: `agents/application_tracker.md`
 **Trigger**: After each successful application
 **Responsibilities**:
@@ -85,20 +118,22 @@ Before starting ANY session:
 - Update master index
 - Complement CSV with rich details
 
-### 6. Question Tracker Agent
+### 8. Question Tracker Agent
 **File**: `agents/question_tracker.md`
 **Trigger**: When application questions are encountered
 **Responsibilities**:
 - Log all questions to `logs/questions/`
 - Flag unanswered questions for human review
+- Track open-ended questions from external applications
 
-### 7. Performance Monitor Agent
+### 9. Performance Monitor Agent
 **File**: `agents/performance_monitor.md`
 **Trigger**: Throughout application process
 **Responsibilities**:
 - Track timing metrics
 - Detect stuck states
 - Log performance data
+- Track external application times separately
 
 ---
 
@@ -205,6 +240,101 @@ Before starting ANY session:
 └─────────────────────────────────────────────────────────┘
 ```
 
+## Workflow 3: Apply External (Non-Easy Apply)
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              COMMAND: "apply external"                   │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│                 INITIALIZATION                           │
+│  1. Activate Application Director (supervisor)          │
+│  2. Activate External Applicant (executor)              │
+│  3. Load personal_profile.md for answers                │
+│  4. Ensure resume file is accessible                    │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│              EXTERNAL APPLICATION LOOP                   │
+│  FOR each non-Easy Apply job:                           │
+│    1. Click "Apply" button on LinkedIn                  │
+│    2. Handle redirect to external site                  │
+│    3. Director analyzes page & identifies ATS           │
+│    4. → Page Processing Loop                            │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│              PAGE PROCESSING LOOP                        │
+│  WHILE not on confirmation page:                        │
+│    1. Director snapshots & analyzes current page        │
+│    2. Director identifies all form fields               │
+│    3. FOR each field:                                   │
+│       - Director provides value/instruction             │
+│       - Executor fills field                            │
+│       - IF open-ended question:                         │
+│         → Generate response from templates              │
+│         → Log to Question Tracker                       │
+│    4. Click Next/Continue/Submit                        │
+│    5. Wait for page load                                │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│              BLOCKERS & EDGE CASES                       │
+│  Handle as encountered:                                 │
+│    - Account creation → Create or login                 │
+│    - CAPTCHA → Flag for human, skip job                 │
+│    - File upload → Upload resume                        │
+│    - Unknown field → Flag and continue/skip             │
+│    - Error → Log and attempt recovery                   │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│              COMPLETION                                  │
+│  1. Detect confirmation page/message                    │
+│  2. Log to CSV Tracker (mark as external)               │
+│  3. Log to Application Tracker                          │
+│  4. Record any flagged questions                        │
+│  5. Return to LinkedIn for next job                     │
+└─────────────────────────────────────────────────────────┘
+```
+
+### ATS System Reference
+
+| ATS | URL Pattern | Complexity | Account Required |
+|-----|-------------|------------|------------------|
+| Workday | `*.myworkdayjobs.com` | High (4-7 pages) | Yes |
+| Greenhouse | `boards.greenhouse.io` | Low (1-2 pages) | No |
+| Lever | `jobs.lever.co` | Low (1 page) | No |
+| Taleo | `*.taleo.net` | High (many pages) | Yes |
+| iCIMS | `careers-*.icims.com` | Medium | Sometimes |
+| SmartRecruiters | `jobs.smartrecruiters.com` | Medium | No |
+| Custom | Company domain | Variable | Variable |
+
+### Open-Ended Question Handling
+
+When an open-ended question is encountered:
+
+1. **Categorize** the question type:
+   - "Why this company?" → Use company-specific template
+   - "Describe experience with X" → Reference profile skills
+   - "Salary expectations" → Use profile values
+   - "Additional information" → Skip if optional
+
+2. **Generate** appropriate response:
+   - Keep concise (2-3 sentences usually)
+   - Reference actual skills from profile
+   - Never fabricate experience
+
+3. **Log** to Question Tracker:
+   - Mark confidence level
+   - Flag for human review if needed
+
 ---
 
 ## Data Files
@@ -257,10 +387,16 @@ The master CSV at `/data/applications.csv` can be imported to Google Sheets:
 
 | Command | What it does |
 |---------|--------------|
+| **Planning** | |
 | "plan search" | Analyze data, generate search strategy |
 | "what should I search" | Same as plan search |
-| "apply to jobs" | Start applying using current plan |
-| "apply to next X jobs" | Quick apply to X visible jobs |
+| **Easy Apply** | |
+| "apply to jobs" | Start Easy Apply using current plan |
+| "apply to next X jobs" | Quick apply to X visible Easy Apply jobs |
+| **External Applications** | |
+| "apply external" | Apply to non-Easy Apply jobs (external sites) |
+| "external applications" | Same as apply external |
+| **General** | |
 | "status" | Show current session statistics |
 | "stop" | End session, save all data |
 | "show csv stats" | Display application statistics |

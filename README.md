@@ -2,7 +2,7 @@
 
 An automated job application system powered by Cursor AI that intelligently searches LinkedIn and applies to jobs using Easy Apply.
 
-## 🚀 Two-Command System
+## 🚀 Three-Command System
 
 ### Command 1: Plan Search
 ```
@@ -13,11 +13,21 @@ Analyzes your application history and generates an **optimal search strategy** b
 - Which areas need more coverage
 - Historical effectiveness data
 
-### Command 2: Apply to Jobs
+### Command 2: Apply to Jobs (Easy Apply)
 ```
 "apply to jobs" or "start applying"
 ```
-Executes the search plan and applies to Easy Apply jobs automatically.
+Executes the search plan and applies to **Easy Apply** jobs automatically.
+
+### Command 3: Apply External (Non-Easy Apply)
+```
+"apply external" or "external applications"
+```
+Handles jobs that redirect to **external company websites**:
+- Detects ATS systems (Workday, Greenhouse, Lever, etc.)
+- Uses Director + Executor agent pair
+- Handles open-ended questions
+- Flags complex situations for human review
 
 ---
 
@@ -33,9 +43,11 @@ Clicker/
 │   ├── locations.md          # Target cities and regions
 │   └── personal_profile.md   # Your info for application answers
 │
-├── agents/                   # 7 specialized agents
+├── agents/                   # 9 specialized agents
 │   ├── search_strategist.md  # Plans optimal search strategy
-│   ├── job_applicant.md      # Executes applications
+│   ├── job_applicant.md      # Executes Easy Apply applications
+│   ├── application_director.md # Supervises external applications
+│   ├── external_applicant.md # Executes on external websites
 │   ├── csv_tracker.md        # Maintains master CSV
 │   ├── search_logger.md      # Logs session searches
 │   ├── application_tracker.md # Detailed application logs
@@ -81,12 +93,14 @@ Set target locations in priority order.
 
 ---
 
-## 🤖 The 7 Agents
+## 🤖 The 9 Agents
 
 | Agent | Type | Purpose |
 |-------|------|---------|
 | **Search Strategist** | Planning | Analyzes data, predicts optimal searches |
-| **Job Applicant** | Execution | Applies to jobs following the plan |
+| **Job Applicant** | Easy Apply | Applies to Easy Apply jobs |
+| **Application Director** | External (Supervisor) | Analyzes external pages, directs executor |
+| **External Applicant** | External (Executor) | Fills forms on external websites |
 | **CSV Tracker** | Data | Maintains master CSV for Google Sheets |
 | **Search Logger** | Logging | Tracks searches per session |
 | **Application Tracker** | Logging | Detailed logs per application |
@@ -124,6 +138,58 @@ The master CSV at `data/applications.csv` tracks **ALL applications** across **A
    - Interview = Green
    - Rejected = Red
    - Offer = Blue
+
+---
+
+## 🌐 External Applications (Non-Easy Apply)
+
+External applications are more complex because they redirect to company websites with varying ATS systems.
+
+### Supported ATS Systems
+
+| ATS | Complexity | Account Required |
+|-----|------------|------------------|
+| **Greenhouse** | Low (1-2 pages) | No |
+| **Lever** | Low (1 page) | No |
+| **SmartRecruiters** | Medium | No |
+| **Workday** | High (4-7 pages) | Yes |
+| **Taleo** | High | Yes |
+| **iCIMS** | Medium | Sometimes |
+| **Custom** | Variable | Variable |
+
+### How It Works
+
+1. **Application Director** (Supervisor):
+   - Analyzes each page
+   - Identifies the ATS system
+   - Determines what fields need filling
+   - Handles open-ended questions
+   - Decides when to skip vs. continue
+
+2. **External Applicant** (Executor):
+   - Follows Director's instructions
+   - Fills form fields
+   - Handles file uploads
+   - Navigates multi-page forms
+   - Reports results back
+
+### Open-Ended Questions
+
+The Director handles text-based questions by:
+- Categorizing the question type
+- Generating appropriate responses from templates
+- Using your profile data for specifics
+- Flagging uncertain answers for human review
+
+### Blockers
+
+Some situations require human intervention:
+- CAPTCHA challenges
+- Two-factor authentication
+- Complex custom ATS systems
+- Ambiguous required fields
+
+These are logged and the application is skipped.
 
 ---
 
