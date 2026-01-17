@@ -1,48 +1,39 @@
 # Target Job Locations
 
-> ⚠️ **SETUP REQUIRED**: Add your preferred job locations below.
-> The agent will search for jobs in these locations in order.
-
----
-
 ## Primary Locations (search in order)
-> Add your target cities/regions. The agent searches these in order.
-
-1. <!-- FILL IN: e.g., "Los Angeles, California" -->
-2. <!-- FILL IN: e.g., "San Francisco, California" -->
-3. <!-- FILL IN: e.g., "New York, New York" -->
-4. <!-- FILL IN: Add more as needed -->
+1. Los Angeles, California
+2. San Francisco, California
+3. San Jose, California
 
 ## Alternative Location Formats
-> LinkedIn sometimes uses different location names. Add variations:
-
-- <!-- FILL IN: e.g., "Greater Los Angeles Area" -->
-- <!-- FILL IN: e.g., "San Francisco Bay Area" -->
-- <!-- FILL IN: e.g., "NYC Metropolitan Area" -->
+Use these variations when searching:
+- Los Angeles Metropolitan Area
+- Greater Los Angeles Area
+- San Francisco Bay Area
+- South Bay, CA
+- Silicon Valley
 
 ## Remote Options
-> If you're open to remote work, include these:
-
-- [ ] United States (Remote)
-- [ ] Remote
+- [x] United States (Remote)
+- [x] Remote
 - [ ] Worldwide (Remote)
 
 ## Relocation
-- **Willing to relocate**: <!-- FILL IN: Yes or No -->
-- **Relocation assistance preferred**: <!-- FILL IN: Yes or No -->
+- **Willing to relocate**: Yes
+- **Relocation assistance preferred**: Yes
 
 ## Commute Preferences
-- **Maximum commute time**: <!-- FILL IN: e.g., 45 minutes -->
-- **Hybrid acceptable**: <!-- FILL IN: Yes or No -->
+- **Maximum commute time**: 45 minutes
+- **Hybrid acceptable**: Yes
 
 ## Time Zone
-- **Your time zone**: <!-- FILL IN: e.g., Pacific Time (PT) -->
-- **Available for other time zones**: <!-- FILL IN: List time zones you can work in -->
+- **Your time zone**: Pacific Time (PT)
+- **Available for Pacific Time working hours**: Yes
+- **Available for other time zones**: Eastern Time (flexible)
 
 ---
 
 ## Notes
-- Order locations by priority (most preferred first)
-- The agent will cycle through keyword + location combinations
-- Remote positions are usually acceptable regardless of listed location
-- Add location variations to improve search coverage
+- Prioritize Los Angeles first (home base)
+- Expand to Bay Area (SF, San Jose) for more opportunities
+- Remote positions are always acceptable
