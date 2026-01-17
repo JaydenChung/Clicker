@@ -45,6 +45,10 @@ Clicker/
 │   ├── resume_content.md     # Detailed resume for open-ended questions
 │   └── projects.md           # Project portfolio
 │
+├── resume/                   # Your resume files
+│   ├── Your_Resume.pdf       # PDF for external applications
+│   └── (LaTeX source)        # Optional: LaTeX source files
+│
 ├── agents/                   # 9 specialized agents
 │   ├── search_strategist.md  # Plans optimal search strategy
 │   ├── job_applicant.md      # Executes Easy Apply applications
@@ -108,6 +112,12 @@ Your project portfolio:
 - Technologies used
 - Challenges and solutions
 - Links to demos/GitHub
+
+### 6. Resume Folder (`resume/`)
+
+Place your resume files here:
+- PDF resume for external applications
+- LaTeX source files (optional, for version control)
 
 ---
 
