@@ -43,8 +43,11 @@ Clicker/
 │   ├── locations.md          # Target cities and regions
 │   ├── personal_profile.md   # Your info for application answers
 │   ├── resume_content.md     # Detailed resume for open-ended questions
-│   ├── projects.md           # Project portfolio
-│   └── interview_answers.md  # Pre-written answers for common questions
+│   └── projects.md           # Project portfolio
+│
+├── resume/                   # Your resume files
+│   ├── Your_Resume.pdf       # PDF for external applications
+│   └── (LaTeX source)        # Optional: LaTeX source files
 │
 ├── agents/                   # 9 specialized agents
 │   ├── search_strategist.md  # Plans optimal search strategy
@@ -110,14 +113,11 @@ Your project portfolio:
 - Challenges and solutions
 - Links to demos/GitHub
 
-### 6. Interview Answers (`config/interview_answers.md`)
+### 6. Resume Folder (`resume/`)
 
-Pre-written answers for common questions:
-- "Tell me about yourself"
-- "Why this company?"
-- Behavioral questions (STAR format)
-- Technical questions
-- Career goals
+Place your resume files here:
+- PDF resume for external applications
+- LaTeX source files (optional, for version control)
 
 ---
 

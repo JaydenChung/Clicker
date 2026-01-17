@@ -95,29 +95,20 @@ For each form field encountered:
 ### Data Sources for Answers
 The Director references these files to construct answers:
 1. **`config/personal_profile.md`** - Basic info, skills, salary expectations
-2. **`config/resume_content.md`** - Work history, achievements, education
+2. **`config/resume_content.md`** - Work history, achievements, education, key strengths
 3. **`config/projects.md`** - Project portfolio, technical work
-4. **`config/interview_answers.md`** - Pre-written answers for common questions
 
 ### Question Categories & Response Strategies
 
 #### Category 1: "Why this company/role?"
 **Pattern**: "Why do you want to work at...", "What interests you about..."
-**Source**: `config/interview_answers.md` → "Why do you want to work at [Company]?" template
+**Source**: `config/personal_profile.md` → Additional Questions section
 **Strategy**: 
 - Extract company name and role from page
-- Use template from interview_answers.md
-- Fill in company-specific details from job posting
+- Use template: "I'm excited about [COMPANY] because of [SPECIFIC REASON]. My background in [SKILL] aligns well with this role."
 - Keep concise (2-3 sentences)
 
-#### Category 2: "Tell me about yourself" / Background
-**Pattern**: "Tell me about yourself", "Walk me through your background"
-**Source**: `config/interview_answers.md` → "Tell me about yourself"
-**Strategy**:
-- Use pre-written elevator pitch
-- Customize if role-specific details available
-
-#### Category 3: Experience/Technical Questions
+#### Category 2: Experience/Technical Questions
 **Pattern**: "Describe your experience with...", "How many years of X..."
 **Source**: `config/resume_content.md` → Technical Skills, Work Experience
 **Strategy**:
@@ -125,7 +116,7 @@ The Director references these files to construct answers:
 - Reference specific projects from projects.md if relevant
 - Use years from personal_profile.md Experience Levels
 
-#### Category 4: Project/Achievement Questions
+#### Category 3: Project/Achievement Questions
 **Pattern**: "Tell me about a project...", "Describe an accomplishment..."
 **Source**: `config/projects.md` → Featured Projects
 **Strategy**:
@@ -133,15 +124,14 @@ The Director references these files to construct answers:
 - Use project description, challenges, and impact
 - Reference specific technologies used
 
-#### Category 5: Behavioral Questions
+#### Category 4: Behavioral Questions
 **Pattern**: "Tell me about a time when...", "Describe a situation where..."
-**Source**: `config/interview_answers.md` → Experience Questions section
+**Source**: `config/resume_content.md` → Key Strengths section
 **Strategy**:
-- Match to pre-written STAR format answers
-- Use Key Strengths examples from resume_content.md
+- Use Key Strengths examples (already in STAR format)
 - If no match, flag for human review
 
-#### Category 6: Salary Expectations
+#### Category 5: Salary Expectations
 **Pattern**: "Expected salary", "Compensation requirements"
 **Source**: `config/personal_profile.md` → Salary Expectations
 **Strategy**:
@@ -149,19 +139,19 @@ The Director references these files to construct answers:
 - If range requested, provide range from profile
 - Note if field is optional (skip if possible)
 
-#### Category 7: Availability
+#### Category 6: Availability
 **Pattern**: "Start date", "When can you start", "Notice period"
 **Source**: `config/personal_profile.md` → Availability
 **Strategy**:
 - Use value from personal_profile.md
 - Default: "2 weeks" or "Immediately" based on profile
 
-#### Category 8: Additional Information
+#### Category 7: Additional Information
 **Pattern**: "Anything else...", "Additional comments"
-**Source**: `config/interview_answers.md` → optional
+**Source**: Optional
 **Strategy**:
 - Usually optional - can skip
-- If required, use brief professional statement from interview_answers.md
+- If required, use brief professional statement from personal_profile.md cover letter
 - Never leave required fields empty
 
 ### Response Generation Rules
