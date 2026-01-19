@@ -39,7 +39,7 @@ def get_available_provider() -> str:
 def call_llm(
     system_prompt: str,
     user_prompt: str,
-    max_tokens: int = 4000,
+    max_tokens: int = 8000,  # Gemini 2.5 Pro needs more for thinking
     provider: Optional[str] = None
 ) -> str:
     """
@@ -80,9 +80,9 @@ def _call_gemini(system_prompt: str, user_prompt: str, max_tokens: int) -> str:
     # Gemini 2.0 handles system instructions differently
     full_prompt = f"{system_prompt}\n\n---\n\n{user_prompt}"
     
-    # Use Gemini 2.0 Flash for speed and quality
+    # Use Gemini 2.5 Pro (best quality, requires paid tier)
     response = client.models.generate_content(
-        model="gemini-2.0-flash",
+        model="gemini-2.5-pro",
         contents=full_prompt,
         config=types.GenerateContentConfig(
             max_output_tokens=max_tokens,
