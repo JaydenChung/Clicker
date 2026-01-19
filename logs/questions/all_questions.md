@@ -98,3 +98,21 @@
 | 8 | INSPYR Solutions | 0 (simple) |
 | 9 | Lithos Carbon | 1 (location) |
 | 10 | JobLeap AI | 1 (work auth) |
+
+## Test Company Alpha - Junior Test Engineer
+**Date**: 2026-01-19 | **Session**: session_TEST_001
+
+- ✅ **How many years of testing experience?**
+  - Answer: `2` (source: profile)
+- ✅ **Are you authorized to work in the US?**
+  - Answer: `Yes` (source: profile)
+
+---
+
+## Test Company Beta - QA Analyst
+**Date**: 2026-01-19 | **Session**: session_TEST_001
+
+- ❓ **Describe your experience with Selenium**
+  - Answer: `` (source: skipped)
+
+---
