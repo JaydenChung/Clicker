@@ -8,15 +8,10 @@ Input: Tailored resume LaTeX, JD analysis
 Output: Score (0-100) and improvement suggestions
 """
 
-import os
 import json
 from typing import Optional
 
-try:
-    import anthropic
-    HAS_ANTHROPIC = True
-except ImportError:
-    HAS_ANTHROPIC = False
+from .llm_client import call_llm, get_available_provider
 
 # System prompt for ATS scoring
 ATS_SCORER_SYSTEM_PROMPT = """You are an expert ATS (Applicant Tracking System) analyzer and resume scorer.
@@ -78,29 +73,21 @@ Output ONLY valid JSON with this exact structure:
 - Output ONLY the JSON - no explanations before or after"""
 
 
-def score_resume(
-    resume_latex: str,
-    jd_analysis: dict,
-    api_key: Optional[str] = None
-) -> dict:
+def score_resume(resume_latex: str, jd_analysis: dict) -> dict:
     """
     Score a tailored resume against JD requirements.
     
     Args:
         resume_latex: The tailored resume in LaTeX format
         jd_analysis: Structured JD analysis from jd_analyzer
-        api_key: Optional API key (defaults to ANTHROPIC_API_KEY env var)
     
     Returns:
         dict with score breakdown and suggestions
     """
-    if not HAS_ANTHROPIC:
-        return _fallback_score(resume_latex, jd_analysis)
+    provider = get_available_provider()
     
-    api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
-    
-    if not api_key:
-        print("  ⚠️  No ANTHROPIC_API_KEY found, using fallback scoring")
+    if provider == "none":
+        print("  ⚠️  No LLM API available, using fallback scoring")
         return _fallback_score(resume_latex, jd_analysis)
     
     user_prompt = f"""Score this resume against the job requirements.
@@ -118,24 +105,22 @@ def score_resume(
 Score the resume using the rubric and output ONLY the JSON result."""
 
     try:
-        client = anthropic.Anthropic(api_key=api_key)
-        
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=2000,
-            system=ATS_SCORER_SYSTEM_PROMPT,
-            messages=[{
-                "role": "user",
-                "content": user_prompt
-            }]
+        response = call_llm(
+            system_prompt=ATS_SCORER_SYSTEM_PROMPT,
+            user_prompt=user_prompt,
+            max_tokens=2000
         )
         
-        response_text = response.content[0].text.strip()
+        response_text = response.strip()
         
         # Handle potential markdown code blocks
         if response_text.startswith("```"):
             lines = response_text.split("\n")
-            response_text = "\n".join(lines[1:-1])
+            if lines[0].startswith("```"):
+                lines = lines[1:]
+            if lines and lines[-1].strip() == "```":
+                lines = lines[:-1]
+            response_text = "\n".join(lines)
         
         return json.loads(response_text)
         
@@ -143,7 +128,7 @@ Score the resume using the rubric and output ONLY the JSON result."""
         print(f"  ⚠️  Failed to parse score JSON: {e}")
         return _fallback_score(resume_latex, jd_analysis)
     except Exception as e:
-        print(f"  ⚠️  Scoring API error: {e}")
+        print(f"  ⚠️  Scoring error: {e}")
         return _fallback_score(resume_latex, jd_analysis)
 
 
@@ -210,6 +195,8 @@ def _fallback_score(resume_latex: str, jd_analysis: dict) -> dict:
 
 
 if __name__ == "__main__":
+    print(f"Using provider: {get_available_provider()}")
+    
     # Test the scorer
     test_resume = r"""
     \documentclass{article}
@@ -229,4 +216,3 @@ if __name__ == "__main__":
     
     result = score_resume(test_resume, test_jd)
     print(json.dumps(result, indent=2))
-

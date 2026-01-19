@@ -34,6 +34,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from agents.jd_analyzer import analyze_jd
 from agents.resume_tailor import tailor_resume
 from agents.ats_scorer import score_resume
+from agents.llm_client import get_available_provider
 
 # --- Configuration ---
 BASE_DIR = Path(__file__).parent.parent
@@ -342,6 +343,17 @@ def main():
     print("=" * 60)
     print("🚀 Pipeline Orchestrator Started")
     print("=" * 60)
+    
+    # Check LLM provider
+    provider = get_available_provider()
+    if provider == "none":
+        print("❌ ERROR: No LLM API key found!")
+        print("   Set one of these environment variables:")
+        print("   - GOOGLE_API_KEY (for Gemini)")
+        print("   - ANTHROPIC_API_KEY (for Claude)")
+        return
+    
+    print(f"✅ LLM Provider: {provider.upper()}")
     print(f"Watching: {PENDING_JD_FILE}")
     print(f"Output:   {TAILORED_DIR}")
     print(f"Target:   {TARGET_ATS_SCORE}% ATS score")

@@ -10,15 +10,10 @@ Input: JD analysis, candidate content pool, LaTeX template
 Output: Complete, compilable LaTeX resume
 """
 
-import os
 import json
 from typing import Optional
 
-try:
-    import anthropic
-    HAS_ANTHROPIC = True
-except ImportError:
-    HAS_ANTHROPIC = False
+from .llm_client import call_llm, get_available_provider
 
 # System prompt for resume tailoring (based on recruiter persona)
 RESUME_TAILOR_SYSTEM_PROMPT = """You are a Senior Technical Recruiter & ATS Optimization Expert.
@@ -71,8 +66,7 @@ def tailor_resume(
     jd_analysis: dict,
     content_pool: dict,
     latex_template: str = "",
-    previous_feedback: str = "",
-    api_key: Optional[str] = None
+    previous_feedback: str = ""
 ) -> str:
     """
     Create a tailored LaTeX resume for a specific job.
@@ -82,18 +76,14 @@ def tailor_resume(
         content_pool: Dict with resume_content, projects, personal_profile
         latex_template: Base LaTeX template to use
         previous_feedback: Feedback from previous scoring iteration
-        api_key: Optional API key (defaults to ANTHROPIC_API_KEY env var)
     
     Returns:
         Complete LaTeX resume code
     """
-    if not HAS_ANTHROPIC:
-        return _fallback_tailor(content_pool, latex_template)
+    provider = get_available_provider()
     
-    api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
-    
-    if not api_key:
-        print("  ⚠️  No ANTHROPIC_API_KEY found, using fallback")
+    if provider == "none":
+        print("  ⚠️  No LLM API available, using fallback")
         return _fallback_tailor(content_pool, latex_template)
     
     # Build the user prompt
@@ -136,19 +126,13 @@ Generate a complete, compilable LaTeX resume that:
 Output ONLY the complete LaTeX code. Start with \\documentclass and end with \\end{document}."""
 
     try:
-        client = anthropic.Anthropic(api_key=api_key)
-        
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=8000,
-            system=RESUME_TAILOR_SYSTEM_PROMPT,
-            messages=[{
-                "role": "user",
-                "content": user_prompt
-            }]
+        response = call_llm(
+            system_prompt=RESUME_TAILOR_SYSTEM_PROMPT,
+            user_prompt=user_prompt,
+            max_tokens=8000
         )
         
-        latex_code = response.content[0].text.strip()
+        latex_code = response.strip()
         
         # Clean up potential markdown code blocks
         if latex_code.startswith("```"):
@@ -163,7 +147,7 @@ Output ONLY the complete LaTeX code. Start with \\documentclass and end with \\e
         return latex_code
         
     except Exception as e:
-        print(f"  ⚠️  Resume tailoring API error: {e}")
+        print(f"  ⚠️  Resume tailoring error: {e}")
         return _fallback_tailor(content_pool, latex_template)
 
 
@@ -196,13 +180,15 @@ def _fallback_tailor(content_pool: dict, latex_template: str) -> str:
 \end{center}
 
 \section*{Note}
-This is a fallback template. Set ANTHROPIC\_API\_KEY environment variable to enable AI-powered resume tailoring.
+This is a fallback template. Set GOOGLE\_API\_KEY environment variable to enable AI-powered resume tailoring.
 
 \end{document}
 """
 
 
 if __name__ == "__main__":
+    print(f"Using provider: {get_available_provider()}")
+    
     # Test the tailor
     test_jd_analysis = {
         "job_title": "Software Engineer",
@@ -218,4 +204,3 @@ if __name__ == "__main__":
     
     result = tailor_resume(test_jd_analysis, test_content)
     print(result[:500])
-

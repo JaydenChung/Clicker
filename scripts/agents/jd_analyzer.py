@@ -8,15 +8,10 @@ Input: Raw job description text
 Output: Structured analysis (keywords, skills, requirements)
 """
 
-import os
 import json
 from typing import Optional
 
-try:
-    import anthropic
-    HAS_ANTHROPIC = True
-except ImportError:
-    HAS_ANTHROPIC = False
+from .llm_client import call_llm, get_available_provider
 
 # System prompt for JD analysis
 JD_ANALYZER_SYSTEM_PROMPT = """You are an expert job description analyzer specializing in ATS (Applicant Tracking System) optimization.
@@ -57,47 +52,39 @@ JSON Schema:
 }"""
 
 
-def analyze_jd(job_description: str, api_key: Optional[str] = None) -> dict:
+def analyze_jd(job_description: str) -> dict:
     """
     Analyze a job description and extract structured data.
     
     Args:
         job_description: Raw job description text
-        api_key: Optional API key (defaults to ANTHROPIC_API_KEY env var)
     
     Returns:
         dict with structured JD analysis
     """
-    if not HAS_ANTHROPIC:
-        # Fallback: basic keyword extraction without API
-        return _fallback_analyze(job_description)
+    provider = get_available_provider()
     
-    api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
-    
-    if not api_key:
-        print("  ⚠️  No ANTHROPIC_API_KEY found, using fallback analysis")
+    if provider == "none":
+        print("  ⚠️  No LLM API available, using fallback analysis")
         return _fallback_analyze(job_description)
     
     try:
-        client = anthropic.Anthropic(api_key=api_key)
-        
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=2000,
-            system=JD_ANALYZER_SYSTEM_PROMPT,
-            messages=[{
-                "role": "user",
-                "content": f"Analyze this job description:\n\n{job_description}"
-            }]
+        response = call_llm(
+            system_prompt=JD_ANALYZER_SYSTEM_PROMPT,
+            user_prompt=f"Analyze this job description:\n\n{job_description}",
+            max_tokens=2000
         )
         
-        # Extract JSON from response
-        response_text = response.content[0].text.strip()
-        
-        # Handle potential markdown code blocks
+        # Clean up response - handle markdown code blocks
+        response_text = response.strip()
         if response_text.startswith("```"):
             lines = response_text.split("\n")
-            response_text = "\n".join(lines[1:-1])
+            # Remove first line (```json) and last line (```)
+            if lines[0].startswith("```"):
+                lines = lines[1:]
+            if lines and lines[-1].strip() == "```":
+                lines = lines[:-1]
+            response_text = "\n".join(lines)
         
         return json.loads(response_text)
         
@@ -105,7 +92,7 @@ def analyze_jd(job_description: str, api_key: Optional[str] = None) -> dict:
         print(f"  ⚠️  Failed to parse JD analysis JSON: {e}")
         return _fallback_analyze(job_description)
     except Exception as e:
-        print(f"  ⚠️  JD analysis API error: {e}")
+        print(f"  ⚠️  JD analysis error: {e}")
         return _fallback_analyze(job_description)
 
 
@@ -151,6 +138,8 @@ def _fallback_analyze(job_description: str) -> dict:
 
 if __name__ == "__main__":
     # Test the analyzer
+    print(f"Using provider: {get_available_provider()}")
+    
     test_jd = """
     Software Engineer at TechCorp
     
@@ -171,4 +160,3 @@ if __name__ == "__main__":
     
     result = analyze_jd(test_jd)
     print(json.dumps(result, indent=2))
-
