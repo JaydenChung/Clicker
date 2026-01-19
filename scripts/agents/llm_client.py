@@ -117,12 +117,13 @@ if __name__ == "__main__":
     print(f"Available provider: {provider}")
     
     if provider != "none":
+        print("Testing LLM call...")
         response = call_llm(
-            system_prompt="You are a helpful assistant. Be concise.",
-            user_prompt="Say 'Hello, pipeline!' in exactly 3 words.",
-            max_tokens=50
+            system_prompt="You are a helpful assistant. Be very concise.",
+            user_prompt="Say exactly: Hello, pipeline!",
+            max_tokens=500  # Gemini 2.5 Pro needs room for thinking
         )
-        print(f"Response: {response}")
+        print(f"✅ Response: {response}")
     else:
         print("No API key found.")
         print("Set GOOGLE_API_KEY or ANTHROPIC_API_KEY environment variable.")
