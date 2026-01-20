@@ -24,21 +24,30 @@ Extract the following:
 
 1. **job_title**: The exact job title
 2. **company**: Company name
-3. **required_skills**: List of explicitly required skills/technologies
-4. **preferred_skills**: List of nice-to-have skills
-5. **years_experience**: Number of years required (integer, or 0 if not specified)
-6. **key_responsibilities**: Main job responsibilities (list of strings)
-7. **keywords**: ATS keywords - exact phrases and terms from the JD that should appear in the resume
-8. **ats_keywords**: The most important keywords that ATS systems will scan for
-9. **tone**: The communication tone (formal, casual, technical, startup)
-10. **industry**: The industry/sector
-11. **education_required**: Required education level
-12. **soft_skills**: Any soft skills mentioned
+3. **role_category**: One of: "swe" (Software Engineer), "pm" (Product Manager), "se" (Solutions Engineer), "data" (Data Scientist/Analyst), "devops" (DevOps/SRE)
+4. **required_skills**: List of explicitly required skills/technologies
+5. **preferred_skills**: List of nice-to-have skills
+6. **years_experience**: Number of years required (integer, or 0 if not specified)
+7. **key_responsibilities**: Main job responsibilities (list of strings)
+8. **keywords**: ATS keywords - exact phrases and terms from the JD that should appear in the resume
+9. **ats_keywords**: The most important keywords that ATS systems will scan for
+10. **tone**: The communication tone (formal, casual, technical, startup)
+11. **industry**: The industry/sector
+12. **education_required**: Required education level
+13. **soft_skills**: Any soft skills mentioned
+
+Role Category Classification:
+- "swe": Software Engineer, Backend, Frontend, Full Stack, Developer, SDE
+- "pm": Product Manager, Program Manager, APM, Product Owner
+- "se": Solutions Engineer, Sales Engineer, Pre-Sales, Customer Success Engineer, Technical Consultant
+- "data": Data Scientist, Data Analyst, ML Engineer, Analytics, Business Intelligence
+- "devops": DevOps, SRE, Platform Engineer, Infrastructure, Cloud Engineer
 
 JSON Schema:
 {
   "job_title": "string",
   "company": "string",
+  "role_category": "string",
   "required_skills": ["string"],
   "preferred_skills": ["string"],
   "years_experience": integer,
@@ -120,9 +129,23 @@ def _fallback_analyze(job_description: str) -> dict:
     years_match = re.search(r'(\d+)\+?\s*years?', jd_lower)
     years = int(years_match.group(1)) if years_match else 0
     
+    # Classify role category based on keywords in JD
+    role_category = "swe"  # Default
+    role_keywords = {
+        "pm": ["product manager", "program manager", "product owner", "apm"],
+        "se": ["solutions engineer", "sales engineer", "pre-sales", "customer success"],
+        "data": ["data scientist", "data analyst", "machine learning", "ml engineer", "analytics"],
+        "devops": ["devops", "sre", "site reliability", "platform engineer", "infrastructure"]
+    }
+    for category, keywords in role_keywords.items():
+        if any(kw in jd_lower for kw in keywords):
+            role_category = category
+            break
+    
     return {
         "job_title": "Unknown",
         "company": "Unknown",
+        "role_category": role_category,
         "required_skills": found_keywords[:5],
         "preferred_skills": found_keywords[5:10],
         "years_experience": years,

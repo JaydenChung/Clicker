@@ -1,0 +1,51 @@
+{
+  "description": "Maps role categories to base resume templates. The JD analyzer classifies each job, and the orchestrator picks the best template.",
+  
+  "templates": {
+    "swe": {
+      "name": "Software Engineer",
+      "file": "swe.tex",
+      "keywords": ["software engineer", "backend", "frontend", "full stack", "developer", "programmer", "sde"],
+      "priority": 1,
+      "description": "Technical engineering roles focused on coding and system design"
+    },
+    "pm": {
+      "name": "Product Manager",
+      "file": "pm.tex", 
+      "keywords": ["product manager", "program manager", "product owner", "apm", "associate product manager"],
+      "priority": 2,
+      "description": "Product strategy and management roles"
+    },
+    "se": {
+      "name": "Solutions Engineer",
+      "file": "se.tex",
+      "keywords": ["solutions engineer", "sales engineer", "pre-sales", "technical consultant", "customer success engineer", "implementation"],
+      "priority": 3,
+      "description": "Customer-facing technical roles that bridge sales and engineering"
+    },
+    "data": {
+      "name": "Data Scientist / Analyst",
+      "file": "data.tex",
+      "keywords": ["data scientist", "data analyst", "machine learning", "ml engineer", "analytics", "business intelligence"],
+      "priority": 4,
+      "description": "Data-focused roles including ML and analytics"
+    },
+    "devops": {
+      "name": "DevOps / SRE",
+      "file": "devops.tex",
+      "keywords": ["devops", "sre", "site reliability", "platform engineer", "infrastructure", "cloud engineer"],
+      "priority": 5,
+      "description": "Infrastructure and operations roles"
+    }
+  },
+  
+  "default_template": "swe",
+  
+  "notes": [
+    "Templates are stored in resume/templates/",
+    "If a template file doesn't exist, falls back to default",
+    "Priority is used for tie-breaking when multiple categories match",
+    "Keywords are matched case-insensitively against job title"
+  ]
+}
+

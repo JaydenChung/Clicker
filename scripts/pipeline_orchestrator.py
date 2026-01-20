@@ -48,6 +48,10 @@ PENDING_JD_FILE = PIPELINE_DIR / "pending_jd.json"
 RESUME_READY_FILE = PIPELINE_DIR / "resume_ready.json"
 ORCHESTRATOR_STATUS_FILE = PIPELINE_DIR / "orchestrator_status.json"
 
+# Template configuration
+TEMPLATES_DIR = BASE_DIR / "resume" / "templates"
+TEMPLATE_MANIFEST_FILE = TEMPLATES_DIR / "_manifest.json"
+
 # Configuration
 MAX_REFINEMENT_ITERATIONS = 3
 TARGET_ATS_SCORE = 90
@@ -84,8 +88,54 @@ def load_content_pool() -> dict:
     
     return content
 
+def load_template_manifest() -> dict:
+    """Load the template manifest that maps role categories to templates."""
+    if TEMPLATE_MANIFEST_FILE.exists():
+        try:
+            return json.loads(TEMPLATE_MANIFEST_FILE.read_text())
+        except json.JSONDecodeError:
+            print("  ⚠️  Invalid template manifest, using defaults")
+    return {"templates": {}, "default_template": "swe"}
+
+def select_template(role_category: str, manifest: dict) -> tuple[str, str]:
+    """
+    Select the best template based on role category.
+    
+    Returns:
+        tuple of (template_name, template_content)
+    """
+    templates = manifest.get("templates", {})
+    default = manifest.get("default_template", "swe")
+    
+    # Try to find template for this role category
+    if role_category in templates:
+        template_info = templates[role_category]
+        template_file = TEMPLATES_DIR / template_info.get("file", f"{role_category}.tex")
+        
+        if template_file.exists():
+            print(f"  🎯 Selected template: {template_info.get('name', role_category)}")
+            return template_info.get("name", role_category), template_file.read_text()
+        else:
+            print(f"  ⚠️  Template file not found: {template_file}, using default")
+    
+    # Fallback to default template
+    default_info = templates.get(default, {})
+    default_file = TEMPLATES_DIR / default_info.get("file", "swe.tex")
+    
+    if default_file.exists():
+        print(f"  🎯 Using default template: {default_info.get('name', 'SWE')}")
+        return default_info.get("name", "Software Engineer"), default_file.read_text()
+    
+    # Ultimate fallback to original resume.tex
+    fallback_path = BASE_DIR / "resume" / "resume.tex"
+    if fallback_path.exists():
+        print(f"  🎯 Using fallback template: resume.tex")
+        return "Default", fallback_path.read_text()
+    
+    return "None", ""
+
 def load_latex_template() -> str:
-    """Load the base LaTeX resume template."""
+    """Load the base LaTeX resume template (legacy function for compatibility)."""
     template_path = BASE_DIR / "resume" / "resume.tex"
     if template_path.exists():
         return template_path.read_text()
@@ -146,7 +196,7 @@ def cleanup_old_signals():
 
 # --- Main Pipeline ---
 
-def process_job(jd_data: dict, content_pool: dict, latex_template: str) -> dict:
+def process_job(jd_data: dict, content_pool: dict, template_manifest: dict) -> dict:
     """
     Process a single job through the full tailoring pipeline.
     Each phase uses a FRESH LLM context for consistent quality.
@@ -176,11 +226,17 @@ def process_job(jd_data: dict, content_pool: dict, latex_template: str) -> dict:
         
         jd_analysis = analyze_jd(job_description)
         
+        # === PHASE 1.5: TEMPLATE SELECTION ===
+        role_category = jd_analysis.get("role_category", "swe")
+        template_name, latex_template = select_template(role_category, template_manifest)
+        
         log_pipeline_event({
             "type": "jd_analyzed",
             "job_id": job_id,
             "keywords_found": len(jd_analysis.get("keywords", [])),
-            "required_skills": jd_analysis.get("required_skills", [])
+            "required_skills": jd_analysis.get("required_skills", []),
+            "role_category": role_category,
+            "template_selected": template_name
         })
         
         # Save JD analysis for reference
@@ -300,7 +356,9 @@ Suggestions: {' '.join(score_result.get('suggestions', []))}
                 "iterations": iteration,
                 "company": company,
                 "job_title": job_title,
-                "job_url": job_url
+                "job_url": job_url,
+                "role_category": role_category,
+                "template_used": template_name
             }
         else:
             print(f"  ⚠️  PDF compilation failed: {error[:100]}")
@@ -322,7 +380,9 @@ Suggestions: {' '.join(score_result.get('suggestions', []))}
                 "company": company,
                 "job_title": job_title,
                 "job_url": job_url,
-                "compilation_error": error
+                "compilation_error": error,
+                "role_category": role_category,
+                "template_used": template_name
             }
             
     except Exception as e:
@@ -366,11 +426,14 @@ def main():
     ensure_directories()
     cleanup_old_signals()
     
-    # Load content pool once at startup (can be refreshed)
+    # Load content pool and template manifest at startup
     content_pool = load_content_pool()
-    latex_template = load_latex_template()
+    template_manifest = load_template_manifest()
     
+    # List available templates
+    templates = template_manifest.get("templates", {})
     print(f"✅ Content pool loaded: {len(content_pool['resume_content'])} chars resume, {len(content_pool['projects'])} chars projects")
+    print(f"✅ Templates available: {', '.join(templates.keys()) or 'default only'}")
     
     update_status("ready", {"message": "Waiting for jobs"})
     
@@ -392,7 +455,7 @@ def main():
                     continue
                 
                 # Process through pipeline
-                result = process_job(jd_data, content_pool, latex_template)
+                result = process_job(jd_data, content_pool, template_manifest)
                 
                 # Write result for Cursor to pick up
                 RESUME_READY_FILE.write_text(json.dumps(result, indent=2))
@@ -404,6 +467,7 @@ def main():
                 
                 if result["success"]:
                     print(f"\n✅ Resume ready for {result.get('company', 'Unknown')}")
+                    print(f"   Template: {result.get('template_used', 'N/A')} ({result.get('role_category', 'N/A')})")
                     print(f"   Score: {result.get('score', 0)}%")
                     print(f"   PDF: {result.get('pdf_path', 'N/A')}")
                 else:

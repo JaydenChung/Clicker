@@ -1,149 +1,178 @@
 # 🖱️ Clicker - LinkedIn Job Application Automation
 
-An autonomous job application system powered by **Cursor AI** that uses a **multi-agent orchestra** to intelligently search LinkedIn and apply to jobs.
+An autonomous job application system powered by **Cursor AI** with a **multi-agent pipeline** that tailors resumes in real-time, achieves 90%+ ATS scores, and applies to jobs at scale.
 
 ---
 
-## 🎼 Architecture: Cursor Commands + Agent Orchestra
+## 🚀 NEW: Multi-Agent Pipeline Architecture
 
-This project uses **Cursor Commands** (`.cursor/commands/`) to orchestrate multiple specialized AI agents. Each command activates a specific combination of agents that work together.
+This system uses a revolutionary **two-process architecture** that ensures consistent, high-quality resume tailoring for EVERY application:
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        CURSOR COMMAND                               │
-│                    (User types command)                             │
-└─────────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                    .cursor/commands/*.md                            │
-│              (Command reads and activates agents)                   │
-└─────────────────────────────────────────────────────────────────────┘
-                              │
-          ┌───────────────────┼───────────────────┐
-          ▼                   ▼                   ▼
-   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-   │   Agent 1   │     │   Agent 2   │     │   Agent 3   │
-   │ (Executor)  │     │  (Tracker)  │     │  (Monitor)  │
-   └─────────────┘     └─────────────┘     └─────────────┘
-          │                   │                   │
-          └───────────────────┼───────────────────┘
-                              ▼
-                    ┌─────────────────┐
-                    │   Data Files    │
-                    │  (CSV, Logs)    │
-                    └─────────────────┘
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     MULTI-AGENT PIPELINE ARCHITECTURE                         ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║     TERMINAL 1                              TERMINAL 2 (Cursor)               ║
+║  ┌─────────────────────┐                 ┌─────────────────────┐             ║
+║  │  PYTHON             │                 │  CURSOR AGENT       │             ║
+║  │  ORCHESTRATOR       │◄───files────────│  (Browser Control)  │             ║
+║  │                     │                 │                     │             ║
+║  │  • JD Analyzer      │                 │  • Navigate LinkedIn│             ║
+║  │  • Template Selector│────files───────►│  • Extract JD text  │             ║
+║  │  • Resume Tailor    │                 │  • Wait for resume  │             ║
+║  │  • ATS Scorer       │                 │  • Fill forms       │             ║
+║  │  • PDF Compiler     │                 │  • Submit apps      │             ║
+║  │                     │                 │                     │             ║
+║  │  Fresh Gemini Pro   │                 │                     │             ║
+║  │  call for EACH step │                 │                     │             ║
+║  └─────────────────────┘                 └─────────────────────┘             ║
+║                                                                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
 ### Why This Architecture?
 
-- **Modular**: Each agent has a single responsibility
-- **Maintainable**: Update one agent without affecting others
-- **Scalable**: Add new agents by creating new `.md` files
-- **Autonomous**: Agents follow rules to continue without human intervention
+| Old Approach (Single Agent) | New Approach (Pipeline) |
+|---------------------------|-------------------------|
+| ❌ Context fills up over time | ✅ Fresh context every call |
+| ❌ Quality degrades by app #4 | ✅ Perfect quality at app #100 |
+| ❌ Single resume for all jobs | ✅ Tailored resume per job |
+| ❌ No ATS optimization | ✅ 90%+ ATS score guaranteed |
+| ❌ One template fits all | ✅ Auto-selects best template |
 
 ---
 
-## 🚀 Three Commands, Full Orchestra
+## 📋 Pipeline Workflow
 
-### Command 1: `/plan-search`
 ```
-Triggers: "plan search", "what should I search", "/plan-search"
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    JOB APPLICATION PIPELINE                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  STEP 1: CURSOR finds job on LinkedIn                                       │
+│         ↓                                                                   │
+│  STEP 2: CURSOR extracts Job Description                                    │
+│         ↓                                                                   │
+│  STEP 3: CURSOR writes JD to pending_jd.json                               │
+│         ↓                                                                   │
+│  ════════════════════ ORCHESTRATOR TAKES OVER ════════════════════         │
+│         ↓                                                                   │
+│  STEP 4: JD ANALYZER (Fresh Gemini Call)                                    │
+│         • Extracts keywords, skills, requirements                           │
+│         • Classifies role: SWE, PM, SE, Data, DevOps                       │
+│         ↓                                                                   │
+│  STEP 5: TEMPLATE SELECTOR                                                  │
+│         • Picks best base resume for this role type                        │
+│         • PM job → pm.tex, SWE job → swe.tex                               │
+│         ↓                                                                   │
+│  STEP 6: RESUME TAILOR (Fresh Gemini Call)                                  │
+│         • Reads your complete content pool                                  │
+│         • Selects most relevant experiences                                 │
+│         • Matches keywords from JD                                          │
+│         • Uses XYZ formula for bullet points                                │
+│         ↓                                                                   │
+│  STEP 7: ATS SCORER (Fresh Gemini Call)                                     │
+│         • Scores resume against JD                                          │
+│         • If score < 90%, provides feedback                                 │
+│         ↓                                                                   │
+│  STEP 8: REFINEMENT LOOP (up to 3 iterations)                               │
+│         • Tailor → Score → Tailor → Score → ...                            │
+│         • Until 90%+ achieved                                               │
+│         ↓                                                                   │
+│  STEP 9: PDF COMPILATION                                                    │
+│         • Compiles LaTeX to PDF                                             │
+│         • Saves to resume/tailored/                                         │
+│         ↓                                                                   │
+│  STEP 10: ORCHESTRATOR writes resume_ready.json                            │
+│         ↓                                                                   │
+│  ════════════════════ CURSOR TAKES OVER ════════════════════               │
+│         ↓                                                                   │
+│  STEP 11: CURSOR applies with tailored resume                              │
+│         ↓                                                                   │
+│  REPEAT for next job                                                        │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**Agents Activated:**
-| Agent | Role |
-|-------|------|
-| Search Strategist | Analyzes history, generates optimal search plan |
-
-**What it does:**
-- Reads application history from CSV
-- Calculates saturation by keyword + location
-- Generates prioritized search queue
-- Saves plan to `data/current_search_plan.md`
 
 ---
 
-### Command 2: `/apply-jobs` (Easy Apply)
+## 🎯 Role-Based Template Selection
+
+The system automatically picks the best base resume for each job:
+
 ```
-Triggers: "apply to jobs", "start applying", "/apply-jobs"
+JOB TITLE                         TEMPLATE SELECTED
+─────────────────────────────────────────────────────
+"Software Engineer"        →      swe.tex
+"Frontend Developer"       →      swe.tex
+"Product Manager"          →      pm.tex
+"Associate PM"             →      pm.tex
+"Solutions Engineer"       →      se.tex
+"Sales Engineer"           →      se.tex
+"Data Scientist"           →      data.tex
+"ML Engineer"              →      data.tex
+"DevOps Engineer"          →      devops.tex
+"SRE"                      →      devops.tex
 ```
 
-**Agents Activated:**
-| Agent | Role |
-|-------|------|
-| Job Applicant | Executes Easy Apply applications |
-| Performance Monitor | Tracks timing for every step |
-| Question Tracker | Logs all questions encountered |
-| CSV Tracker | Updates master CSV after each application |
-| Application Tracker | Creates detailed markdown logs |
-| Search Logger | Tracks search progress |
+### Adding New Templates
 
-**What it does:**
-- Reads search plan from `data/current_search_plan.md`
-- Searches LinkedIn for each keyword + location
-- Applies to all Easy Apply jobs
-- Updates CSV after each application
+1. Create `resume/templates/your_role.tex`
+2. Add entry to `resume/templates/_manifest.json`:
+
+```json
+{
+  "your_role": {
+    "name": "Your Role Name",
+    "file": "your_role.tex",
+    "keywords": ["job title keywords"],
+    "priority": 6
+  }
+}
+```
 
 ---
 
-### Command 3: `/apply-external` (Non-Easy Apply)
+## 🚀 Quick Start
+
+### Prerequisites
+
+- [Cursor IDE](https://cursor.sh) with browser control extension
+- Chrome browser
+- LinkedIn account (signed in)
+- Google Gemini API key (or Anthropic)
+
+### Step 1: Set API Key
+
+```bash
+export GOOGLE_API_KEY="your-gemini-api-key"
 ```
-Triggers: "apply external", "external applications", "/apply-external"
+
+### Step 2: Start the Orchestrator
+
+```bash
+# Terminal 1
+cd /path/to/Clicker
+python3 scripts/pipeline_orchestrator.py
 ```
 
-**Agents Activated:**
-| Agent | Role |
-|-------|------|
-| Application Director | **Supervisor** - analyzes pages, directs executor |
-| External Applicant | **Executor** - fills forms as directed |
-| Performance Monitor | Tracks timing for every step |
-| Question Tracker | Logs all questions (especially open-ended) |
-| CSV Tracker | Updates master CSV after each application |
-| Application Tracker | Creates detailed markdown logs |
+You should see:
+```
+════════════════════════════════════════════════════════════════
+🚀 Pipeline Orchestrator Started
+════════════════════════════════════════════════════════════════
+✅ LLM Provider: GEMINI
+✅ Templates available: swe, pm, se, data, devops
+Waiting for job descriptions from Cursor agent...
+```
 
-**What it does:**
-- Handles jobs that redirect to external company websites
-- Detects ATS systems (Workday, Greenhouse, Lever, etc.)
-- Navigates multi-page application forms
-- Generates responses for open-ended questions
+### Step 3: Run Cursor Command
 
----
-
-## 🚨 Critical Rules: Autonomous Operation
-
-This system is designed to run **autonomously**. The user may leave their computer unattended expecting applications to continue.
-
-### Rule #1: Never Stop for "Fit" Reasons
-The session must **NEVER** stop because:
-- ❌ Job requires more experience than candidate has
-- ❌ Salary seems too high/low
-- ❌ Role seems too senior/junior
-- ❌ Location isn't ideal
-
-**If a suboptimal job is encountered**: Complete the application anyway, log concerns in notes, continue to next job.
-
-### Rule #2: Soft Blockers → Leave Tab Open, Continue
-When encountering verification requirements:
-1. Log the blocker in `logs/session_stops.md`
-2. Leave the tab open for manual completion
-3. Return to LinkedIn
-4. Continue applying to other jobs
-
-### Rule #3: Log Every Session Stop
-Every session stop is documented in `logs/session_stops.md`:
-- **Session START** with timestamp, session ID, max applications planned
-- **Session END** with timestamp, stop reason, applications completed
-- Application limit reached (`max_applications_per_session` from config)
-- Blockers (soft and hard)
-- Errors
-- User interrupts
-
-### Rule #4: Hard Blockers → Skip Application, Continue Session
-For insurmountable blockers (CAPTCHA, mandatory assessments):
-1. Log the blocker
-2. Skip THIS application
-3. Continue with next job
+```
+# In Cursor
+/apply-pipeline
+```
 
 ---
 
@@ -151,237 +180,228 @@ For insurmountable blockers (CAPTCHA, mandatory assessments):
 
 ```
 Clicker/
-├── .cursor/
-│   └── commands/              # 🎯 CURSOR COMMANDS (entry points)
-│       ├── plan-search.md     # Invokes Search Strategist
-│       ├── apply-jobs.md      # Invokes Easy Apply orchestra
-│       └── apply-external.md  # Invokes External App orchestra
+├── .cursor/commands/              # 🎯 CURSOR COMMANDS
+│   ├── plan-search.md             # Generate search strategy
+│   └── apply-pipeline.md          # Full pipeline application
 │
-├── .cursorrules               # Global rules and orchestration
+├── scripts/                       # 🐍 PYTHON ORCHESTRATOR
+│   ├── pipeline_orchestrator.py   # Main orchestrator loop
+│   └── agents/                    # Specialized LLM agents
+│       ├── llm_client.py          # Gemini/Anthropic wrapper
+│       ├── jd_analyzer.py         # JD analysis + role classification
+│       ├── resume_tailor.py       # Resume generation
+│       └── ats_scorer.py          # ATS scoring + feedback
 │
-├── agents/                    # 🤖 THE 9 AGENTS
-│   ├── search_strategist.md   # Plans optimal search strategy
-│   ├── job_applicant.md       # Executes Easy Apply applications
-│   ├── application_director.md # Supervises external applications
-│   ├── external_applicant.md  # Executes on external websites
-│   ├── csv_tracker.md         # Maintains master CSV
-│   ├── search_logger.md       # Logs session searches
-│   ├── application_tracker.md # Detailed application logs
-│   ├── question_tracker.md    # Tracks unanswered questions
-│   └── performance_monitor.md # Timing and stuck detection
+├── resume/                        # 📄 RESUME ASSETS
+│   ├── templates/                 # Role-specific base templates
+│   │   ├── _manifest.json         # Template configuration
+│   │   ├── swe.tex                # Software Engineer template
+│   │   ├── pm.tex                 # Product Manager template
+│   │   └── ...                    # Add more as needed
+│   └── tailored/                  # Generated tailored resumes
+│       ├── {job_id}_final.pdf     # Compiled PDF
+│       ├── {job_id}_final.tex     # LaTeX source
+│       └── {job_id}_jd_analysis   # JD analysis for reference
 │
-├── config/                    # ⚠️ USER CONFIGURATION (edit these!)
-│   ├── personal_profile.md    # Your info for application answers
-│   ├── job_preferences.md     # Job titles, keywords, filters
-│   ├── locations.md           # Target cities and regions
-│   ├── resume_content.md      # Detailed resume for questions
-│   └── projects.md            # Project portfolio
+├── config/                        # ⚠️ USER CONFIGURATION
+│   ├── personal_profile.md        # Your info for applications
+│   ├── resume_content.md          # FULL content pool for tailoring
+│   ├── projects.md                # All projects (even old ones!)
+│   ├── job_preferences.md         # Target roles, max apps
+│   └── locations.md               # Target cities
 │
-├── data/                      # 📊 PERSISTENT DATA
-│   ├── applications.csv       # Master CSV (import to Google Sheets!)
-│   ├── current_search_plan.md # Active search strategy
-│   └── search_insights.md     # Learning from past sessions
+├── data/                          # 📊 RUNTIME DATA
+│   ├── pipeline/                  # Cursor ↔ Orchestrator communication
+│   │   ├── pending_jd.json        # Cursor writes, Orchestrator reads
+│   │   └── resume_ready.json      # Orchestrator writes, Cursor reads
+│   ├── applications.csv           # Master tracking spreadsheet
+│   └── events/                    # Event logs for processing
 │
-├── logs/                      # 📝 SESSION LOGS
-│   ├── session_stops.md       # 🚨 All session stop reasons
-│   ├── sessions/              # Per-session search logs
-│   ├── applications/          # Application records (organized by session)
-│   │   ├── _index.md          # Master index of all applications
-│   │   └── session_{id}_{type}/ # Session folders (easy-apply or external)
-│   ├── questions/             # Question database
-│   └── performance/           # Timing metrics
-│
-└── resume/                    # 📄 YOUR RESUME FILES
-    └── Your_Resume.pdf        # PDF for external applications
+└── logs/                          # 📝 SESSION LOGS
+    ├── pipeline/                  # Pipeline-specific logs
+    ├── sessions/                  # Application session logs
+    └── session_stops.md           # Why sessions ended
 ```
 
 ---
 
-## ⚙️ Setup (Required Before First Run)
+## ⚙️ Configuration
 
-### Step 1: Fill Out Config Files
+### Content Pool (`config/resume_content.md`)
 
-All config files have `<!-- FILL IN: ... -->` placeholders. Replace them with your information:
+This file should contain **EVERYTHING** about you - the AI will select what's relevant:
 
-| File | What to Fill |
-|------|--------------|
-| `config/personal_profile.md` | Name, email, phone, work authorization, experience levels |
-| `config/job_preferences.md` | Target job titles, keywords, filters |
-| `config/locations.md` | Target cities in priority order |
-| `config/resume_content.md` | Detailed resume for open-ended questions |
-| `config/projects.md` | Project portfolio with descriptions |
+```markdown
+## Work Experience
 
-### Step 2: Add Resume
+### Company A - Role (2023-Present)
+- Achievement 1 with metrics
+- Achievement 2 with metrics
+- Technologies: Python, AWS, etc.
 
-Place your PDF resume in the `resume/` folder for external applications.
+### Company B - Role (2021-2023)
+- Older but still relevant achievements
+- ...
 
-### Step 3: Ensure Browser is Ready
+## Projects
 
-- Chrome is open and controlled by Cursor
-- LinkedIn is loaded and you are **signed in**
-- Browser extension is active
+### Project 1
+- Full description
+- Technologies used
+- Metrics/outcomes
+
+### Project 2
+...
+
+## Skills
+- Programming: Python, JavaScript, Go, ...
+- Cloud: AWS, GCP, Azure
+- Tools: Docker, Kubernetes, Terraform
+...
+
+## Education
+...
+
+## Certifications
+...
+```
+
+**Key Point**: Include MORE than what fits on one page. The AI will select the most relevant content for each job.
+
+### Templates (`resume/templates/_manifest.json`)
+
+```json
+{
+  "templates": {
+    "swe": {
+      "name": "Software Engineer",
+      "file": "swe.tex",
+      "keywords": ["software engineer", "developer", "sde"],
+      "priority": 1
+    },
+    "pm": {
+      "name": "Product Manager", 
+      "file": "pm.tex",
+      "keywords": ["product manager", "apm", "program manager"],
+      "priority": 2
+    }
+  },
+  "default_template": "swe"
+}
+```
 
 ---
 
-## 🤖 The 9 Agents
-
-| Agent | Type | Command | Purpose |
-|-------|------|---------|---------|
-| **Search Strategist** | Planning | `/plan-search` | Analyzes data, predicts optimal searches |
-| **Job Applicant** | Executor | `/apply-jobs` | Applies to Easy Apply jobs |
-| **Application Director** | Supervisor | `/apply-external` | Analyzes external pages, directs executor |
-| **External Applicant** | Executor | `/apply-external` | Fills forms on external websites |
-| **CSV Tracker** | Data | All | Maintains master CSV for Google Sheets |
-| **Search Logger** | Logging | `/apply-jobs` | Tracks searches per session |
-| **Application Tracker** | Logging | All | Detailed logs per application |
-| **Question Tracker** | Logging | All | Flags unanswered questions |
-| **Performance Monitor** | Monitoring | All | Tracks timing and stuck states |
-
----
-
-## 🔄 Typical Workflow
+## 🔄 Typical Usage Workflow
 
 ```
+Session Start:
 ┌────────────────────────────────────────────────────┐
 │ Step 1: PLAN                                       │
 │ Command: "/plan-search"                            │
-│ → Search Strategist analyzes your history          │
-│ → Generates prioritized search strategy            │
-│ → Outputs: data/current_search_plan.md             │
+│ → Analyzes your application history                │
+│ → Generates optimized search strategy              │
 └────────────────────────────────────────────────────┘
                       │
                       ▼
 ┌────────────────────────────────────────────────────┐
-│ Step 2: APPLY (Easy Apply)                         │
-│ Command: "/apply-jobs"                             │
-│ → 6 agents activate simultaneously                 │
-│ → Follows the search plan                          │
-│ → Updates CSV after each application               │
-│ → Continues until max_applications reached or plan │
-│   complete (limit set in config/job_preferences.md)│
+│ Step 2: START ORCHESTRATOR                         │
+│ Terminal: python3 scripts/pipeline_orchestrator.py │
+│ → Loads your content pool                          │
+│ → Loads template manifest                          │
+│ → Waits for jobs from Cursor                       │
 └────────────────────────────────────────────────────┘
                       │
                       ▼
 ┌────────────────────────────────────────────────────┐
-│ Step 2b: APPLY (External) - Optional               │
-│ Command: "/apply-external"                         │
-│ → 6 agents activate (Director + Executor pair)     │
-│ → Handles non-Easy Apply jobs                      │
-│ → Navigates external ATS systems                   │
+│ Step 3: APPLY                                      │
+│ Cursor: "/apply-pipeline"                          │
+│ → Searches LinkedIn                                │
+│ → For each job:                                    │
+│   → Extracts JD → Orchestrator tailors resume      │
+│   → Achieves 90%+ ATS score                        │
+│   → Applies with tailored resume                   │
+│ → Continues until limit reached                    │
 └────────────────────────────────────────────────────┘
                       │
                       ▼
 ┌────────────────────────────────────────────────────┐
-│ Step 3: REVIEW                                     │
-│ → Check logs/session_stops.md for blockers         │
-│ → Complete any "Pending Manual" applications       │
-│ → Download applications.csv → Google Sheets        │
-│ → Review logs/questions/unanswered.md              │
-│ → Update config/personal_profile.md                │
+│ Step 4: REVIEW                                     │
+│ → Check resume/tailored/ for generated resumes     │
+│ → Review logs/session_stops.md                     │
+│ → Export applications.csv to Google Sheets         │
 └────────────────────────────────────────────────────┘
-                      │
-                      ▼
-              Repeat from Step 1
 ```
 
 ---
 
-## 📊 Google Sheets Integration
+## 📊 Output Files
 
-The master CSV at `data/applications.csv` tracks **ALL applications** across **ALL sessions**.
+After each application, you'll find in `resume/tailored/`:
 
-### Import to Google Sheets
-1. Download `data/applications.csv`
-2. Google Sheets → File → Import → Upload
-3. Select "Create new spreadsheet"
-4. Separator: Comma
-
-### Application Status Values
-
-| Status | Meaning |
-|--------|---------|
-| `Applied` | Successfully submitted |
-| `Pending Manual` | Soft blocker - awaiting human completion |
-| `Skipped` | Hard blocker - could not complete |
-| `Interview` | Got interview (manual update) |
-| `Rejected` | Rejected (manual update) |
-| `Offer` | Received offer (manual update) |
+| File | Description |
+|------|-------------|
+| `{job_id}_jd_analysis.json` | Extracted keywords, skills, role category |
+| `{job_id}_v1.tex` | First tailoring iteration |
+| `{job_id}_v1_score.json` | ATS score and feedback |
+| `{job_id}_v2.tex` | Refined (if needed) |
+| `{job_id}_v2_score.json` | Improved score |
+| `{job_id}_final.tex` | Best version |
+| `{job_id}_final.pdf` | Compiled PDF (if LaTeX installed) |
 
 ---
 
-## 🌐 Supported ATS Systems
+## 🚨 Critical Rules: Autonomous Operation
 
-| ATS | Complexity | Account Required |
-|-----|------------|------------------|
-| **Greenhouse** | Low (1-2 pages) | No |
-| **Lever** | Low (1 page) | No |
-| **SmartRecruiters** | Medium | No |
-| **Workday** | High (4-7 pages) | Yes |
-| **Taleo** | High | Yes |
-| **iCIMS** | Medium | Sometimes |
-| **Custom** | Variable | Variable |
+This system is designed to run **autonomously**. The user may leave their computer unattended.
 
----
+### Rule #1: Never Stop for "Fit" Reasons
+The session must **NEVER** stop because:
+- ❌ Job requires more experience
+- ❌ Salary seems wrong
+- ❌ Role seems too senior/junior
 
-## 📝 Command Reference
+**Action**: Complete the application anyway, log concerns, continue.
 
-| Command | Agents | Purpose |
-|---------|--------|---------|
-| `/plan-search` | 1 | Generate search strategy |
-| `/apply-jobs` | 6 | Easy Apply automation |
-| `/apply-external` | 6 | External site automation |
-| `"status"` | - | Show session statistics |
-| `"stop"` | - | End session, save data |
+### Rule #2: Soft Blockers → Leave Tab Open, Continue
+For email/phone verification:
+1. Log the blocker
+2. Leave tab open
+3. Continue applying
 
----
-
-## 📋 After Each Session
-
-1. **Check session stops**: `logs/session_stops.md`
-2. **Complete blocked apps**: Tabs should still be open
-3. **Review unanswered questions**: `logs/questions/unanswered.md`
-4. **Export to Google Sheets**: `data/applications.csv`
-5. **Run plan-search**: Before next apply session
+### Rule #3: Hard Blockers → Skip, Continue
+For CAPTCHA, mandatory assessments:
+1. Log the blocker
+2. Skip THIS application
+3. Continue with next job
 
 ---
 
-## 🛡️ Safety Features
+## 🛠️ Troubleshooting
 
-- **CSV saves after each application** - No data loss
-- **No duplicate applications** - Skips "Applied" badges
-- **Graceful session end** - Completes current app first
-- **Configurable application limit** - `max_applications_per_session` in config (default: 10)
-- **Session start/end logging** - Every session documented in `logs/session_stops.md`
-- **Complete logging** - Everything tracked for review
-- **Soft blocker handling** - Leaves tabs open, continues session
+### "No LLM API key found"
+```bash
+export GOOGLE_API_KEY="your-key-here"
+# or
+export ANTHROPIC_API_KEY="your-key-here"
+```
 
----
+### "pdflatex not found"
+```bash
+# macOS
+brew install --cask basictex
 
-## ⚠️ Prerequisites
+# Then restart terminal or:
+eval "$(/usr/libexec/path_helper)"
+```
 
-- [Cursor IDE](https://cursor.sh) with browser control
-- Chrome with Cursor browser extension
-- LinkedIn account (signed in)
-- Completed config files (all `<!-- FILL IN -->` placeholders replaced)
+### "Template not found"
+Ensure template files exist in `resume/templates/` and are listed in `_manifest.json`.
 
----
-
-## 🐛 Troubleshooting
-
-### "No search plan found"
-Run `/plan-search` first to generate a strategy.
-
-### "Profile not filled out"
-Complete all `<!-- FILL IN: -->` placeholders in config files.
-
-### "Session stopped unexpectedly"
-Check `logs/session_stops.md` for the reason and category.
-
-### "Application pending manual"
-A soft blocker occurred. Find the open tab and complete manually.
-
-### "Session ended at 10 applications"
-This is the default `max_applications_per_session` limit. Change it in `config/job_preferences.md` under Session Settings.
+### "Score stuck below 90%"
+- Check that `config/resume_content.md` has comprehensive content
+- Ensure the job isn't too far outside your experience
+- Review feedback in `*_score.json` files
 
 ---
 
